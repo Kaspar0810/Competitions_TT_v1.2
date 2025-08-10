@@ -1,0 +1,7 @@
+2025-08-03 11:09:50,966 - ERROR - Необработанное исключение: AttributeError: 'str' object has no attribute 'getsize'
+2025-08-03 11:09:50,967 - ERROR - Трассировка стека:
+Traceback (most recent call last):
+  File "c:\Users\Alex\Competitions_TT_v1.1\main.py", line 758, in log_file_read
+    file_size_bytes = file_path.getsize(f)
+                      ^^^^^^^^^^^^^^^^^
+AttributeError: 'str' object has no attribute 'getsize'

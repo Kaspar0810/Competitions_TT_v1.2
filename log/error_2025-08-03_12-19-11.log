@@ -1,0 +1,35 @@
+2025-08-03 12:19:58,013 - ERROR - Необработанное исключение: AttributeError: 'MainWindow' object has no attribute 'system_made'
+2025-08-03 12:19:58,014 - ERROR - Трассировка стека:
+Traceback (most recent call last):
+  File "C:\Users\Alex\AppData\Local\Programs\Python\Python313\Lib\runpy.py", line 198, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+                     "__main__", mod_spec)
+  File "C:\Users\Alex\AppData\Local\Programs\Python\Python313\Lib\runpy.py", line 88, in _run_code
+    exec(code, run_globals)
+    ~~~~^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Alex\.vscode\extensions\ms-python.debugpy-2025.10.0-win32-x64\bundled\libs\debugpy\launcher/../..\debugpy\__main__.py", line 71, in <module>
+    cli.main()
+    ~~~~~~~~^^
+  File "c:\Users\Alex\.vscode\extensions\ms-python.debugpy-2025.10.0-win32-x64\bundled\libs\debugpy\launcher/../..\debugpy/..\debugpy\server\cli.py", line 501, in main
+    run()
+    ~~~^^
+  File "c:\Users\Alex\.vscode\extensions\ms-python.debugpy-2025.10.0-win32-x64\bundled\libs\debugpy\launcher/../..\debugpy/..\debugpy\server\cli.py", line 351, in run_file
+    runpy.run_path(target, run_name="__main__")
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Alex\.vscode\extensions\ms-python.debugpy-2025.10.0-win32-x64\bundled\libs\debugpy\_vendored\pydevd\_pydevd_bundle\pydevd_runpy.py", line 310, in run_path
+    return _run_module_code(code, init_globals, run_name, pkg_name=pkg_name, script_name=fname)
+  File "c:\Users\Alex\.vscode\extensions\ms-python.debugpy-2025.10.0-win32-x64\bundled\libs\debugpy\_vendored\pydevd\_pydevd_bundle\pydevd_runpy.py", line 127, in _run_module_code
+    _run_code(code, mod_globals, init_globals, mod_name, mod_spec, pkg_name, script_name)
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Alex\.vscode\extensions\ms-python.debugpy-2025.10.0-win32-x64\bundled\libs\debugpy\_vendored\pydevd\_pydevd_bundle\pydevd_runpy.py", line 118, in _run_code
+    exec(code, run_globals)
+    ~~~~^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Alex\Competitions_TT_v1.1\main.py", line 1147, in <module>
+    my_win = MainWindow()
+  File "c:\Users\Alex\Competitions_TT_v1.1\main.py", line 258, in __init__
+    self._connectActions()
+    ~~~~~~~~~~~~~~~~~~~~^^
+  File "c:\Users\Alex\Competitions_TT_v1.1\main.py", line 512, in _connectActions
+    self.system_made_Action.triggered.connect(self.system_made)
+                                              ^^^^^^^^^^^^^^^^
+AttributeError: 'MainWindow' object has no attribute 'system_made'

@@ -1,0 +1,7 @@
+2025-08-03 11:16:09,484 - ERROR - Необработанное исключение: PermissionError: [WinError 32] Процесс не может получить доступ к файлу, так как этот файл занят другим процессом: 'C:\\Users\\Alex\\Competitions_TT_v1.1\\log\\error_2025-08-03_11-15-48.log'
+2025-08-03 11:16:09,485 - ERROR - Трассировка стека:
+Traceback (most recent call last):
+  File "c:\Users\Alex\Competitions_TT_v1.1\main.py", line 761, in log_file_read
+    os.remove(file_path)
+    ~~~~~~~~~^^^^^^^^^^^
+PermissionError: [WinError 32] Процесс не может получить доступ к файлу, так как этот файл занят другим процессом: 'C:\\Users\\Alex\\Competitions_TT_v1.1\\log\\error_2025-08-03_11-15-48.log'

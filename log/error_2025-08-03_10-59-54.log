@@ -1,0 +1,9 @@
+2025-08-03 11:00:04,524 - ERROR - Необработанное исключение: FileNotFoundError: [WinError 2] Не удается найти указанный файл: 'error_2025-08-02_08-46-44.log'
+2025-08-03 11:00:04,525 - ERROR - Трассировка стека:
+Traceback (most recent call last):
+  File "c:\Users\Alex\Competitions_TT_v1.1\main.py", line 757, in log_file_read
+    file_size_bytes = os.path.getsize(f)
+  File "C:\Users\Alex\AppData\Local\Programs\Python\Python313\Lib\genericpath.py", line 86, in getsize
+    return os.stat(filename).st_size
+           ~~~~~~~^^^^^^^^^^
+FileNotFoundError: [WinError 2] Не удается найти указанный файл: 'error_2025-08-02_08-46-44.log'

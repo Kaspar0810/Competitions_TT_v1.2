@@ -1,0 +1,11 @@
+2025-08-04 10:24:53,316 - ERROR - Необработанное исключение: TypeError: question(parent: Optional[QWidget], title: Optional[str], text: Optional[str], buttons: Union[QMessageBox.StandardButtons, QMessageBox.StandardButton] = QMessageBox.StandardButtons(QMessageBox.Yes|QMessageBox.No), defaultButton: QMessageBox.StandardButton = QMessageBox.NoButton): too many arguments
+2025-08-04 10:24:53,319 - ERROR - Трассировка стека:
+Traceback (most recent call last):
+  File "c:\Users\Alex\Competitions_TT_v1.1\main.py", line 300, in closeEvent
+    reply = QMessageBox.question\
+            (self, 'Вы нажали на крестик',
+                "Вы уверены, что хотите уйти?\n"
+    ...<5 lines>...
+        QMessageBox.No,
+        QMessageBox.Cancel)
+TypeError: question(parent: Optional[QWidget], title: Optional[str], text: Optional[str], buttons: Union[QMessageBox.StandardButtons, QMessageBox.StandardButton] = QMessageBox.StandardButtons(QMessageBox.Yes|QMessageBox.No), defaultButton: QMessageBox.StandardButton = QMessageBox.NoButton): too many arguments

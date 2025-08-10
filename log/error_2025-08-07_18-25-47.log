@@ -1,0 +1,36 @@
+2025-08-07 18:25:55,342 - ERROR - Необработанное исключение: TypeError: 'int' object is not iterable
+2025-08-07 18:25:55,355 - ERROR - Трассировка стека:
+Traceback (most recent call last):
+  File "c:\Users\Alex\Competitions_TT_v1.1\main.py", line 3674, in tool_page
+    page()
+    ~~~~^^
+  File "c:\Users\Alex\Competitions_TT_v1.1\main.py", line 4086, in page
+    hide_show_columns(tb)
+    ~~~~~~~~~~~~~~~~~^^^^
+  File "c:\Users\Alex\Competitions_TT_v1.1\main.py", line 10640, in hide_show_columns
+    for p in num_columns:
+             ^^^^^^^^^^^
+TypeError: 'int' object is not iterable
+2025-08-07 18:26:02,035 - ERROR - Необработанное исключение: TypeError: show(self): too many arguments
+2025-08-07 18:26:02,035 - ERROR - Трассировка стека:
+Traceback (most recent call last):
+  File "c:\Users\Alex\Competitions_TT_v1.1\main.py", line 3613, in tab_etap
+    fill_table(player_list)
+    ~~~~~~~~~~^^^^^^^^^^^^^
+  File "c:\Users\Alex\Competitions_TT_v1.1\main.py", line 2778, in fill_table
+    my_win.tableView.show(num_columns)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+TypeError: show(self): too many arguments
+2025-08-07 18:26:02,120 - ERROR - Необработанное исключение: TypeError: show(self): too many arguments
+2025-08-07 18:26:02,120 - ERROR - Трассировка стека:
+Traceback (most recent call last):
+  File "c:\Users\Alex\Competitions_TT_v1.1\main.py", line 3674, in tool_page
+    page()
+    ~~~~^^
+  File "c:\Users\Alex\Competitions_TT_v1.1\main.py", line 4043, in page
+    fill_table(player_list)
+    ~~~~~~~~~~^^^^^^^^^^^^^
+  File "c:\Users\Alex\Competitions_TT_v1.1\main.py", line 2778, in fill_table
+    my_win.tableView.show(num_columns)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+TypeError: show(self): too many arguments

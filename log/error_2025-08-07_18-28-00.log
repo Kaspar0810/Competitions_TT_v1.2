@@ -1,0 +1,26 @@
+2025-08-07 18:28:07,621 - ERROR - Необработанное исключение: TypeError: 'int' object is not iterable
+2025-08-07 18:28:07,639 - ERROR - Трассировка стека:
+Traceback (most recent call last):
+  File "c:\Users\Alex\Competitions_TT_v1.1\main.py", line 3675, in tool_page
+    page()
+    ~~~~^^
+  File "c:\Users\Alex\Competitions_TT_v1.1\main.py", line 4087, in page
+    hide_show_columns(tb)
+    ~~~~~~~~~~~~~~~~~^^^^
+  File "c:\Users\Alex\Competitions_TT_v1.1\main.py", line 10641, in hide_show_columns
+    for p in num_columns:
+             ^^^^^^^^^^^
+TypeError: 'int' object is not iterable
+2025-08-07 18:28:14,875 - ERROR - Необработанное исключение: TypeError: 'int' object is not iterable
+2025-08-07 18:28:14,875 - ERROR - Трассировка стека:
+Traceback (most recent call last):
+  File "c:\Users\Alex\Competitions_TT_v1.1\main.py", line 3675, in tool_page
+    page()
+    ~~~~^^
+  File "c:\Users\Alex\Competitions_TT_v1.1\main.py", line 4087, in page
+    hide_show_columns(tb)
+    ~~~~~~~~~~~~~~~~~^^^^
+  File "c:\Users\Alex\Competitions_TT_v1.1\main.py", line 10641, in hide_show_columns
+    for p in num_columns:
+             ^^^^^^^^^^^
+TypeError: 'int' object is not iterable

@@ -1,0 +1,7 @@
+2025-08-04 11:20:08,757 - ERROR - Необработанное исключение: AttributeError: type object 'QMessageBox' has no attribute 'RejectlRole'
+2025-08-04 11:20:08,758 - ERROR - Трассировка стека:
+Traceback (most recent call last):
+  File "c:\Users\Alex\Competitions_TT_v1.1\main.py", line 308, in closeEvent
+    msgBox.addButton(btn_cancel, QMessageBox.RejectlRole)
+                                 ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'QMessageBox' has no attribute 'RejectlRole'. Did you mean: 'RejectRole'?

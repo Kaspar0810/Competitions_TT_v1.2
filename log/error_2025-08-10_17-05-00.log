@@ -1,0 +1,20 @@
+2025-08-10 17:08:13,246 - ERROR - Необработанное исключение: KeyError: 'Д'
+2025-08-10 17:08:13,247 - ERROR - Трассировка стека:
+Traceback (most recent call last):
+  File "c:\Users\Alex\Competitions_TT_v1.2\main.py", line 691, in fast_change_comp
+    button_comp_enabled()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "c:\Users\Alex\Competitions_TT_v1.2\main.py", line 1737, in button_comp_enabled
+    id_comp = id_dict[txt_button] # id соревнований к котормы переходим
+              ~~~~~~~^^^^^^^^^^^^
+KeyError: 'Д'
+2025-08-10 17:08:18,201 - ERROR - Необработанное исключение: KeyError: 'Д'
+2025-08-10 17:08:18,201 - ERROR - Трассировка стека:
+Traceback (most recent call last):
+  File "c:\Users\Alex\Competitions_TT_v1.2\main.py", line 691, in fast_change_comp
+    button_comp_enabled()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "c:\Users\Alex\Competitions_TT_v1.2\main.py", line 1737, in button_comp_enabled
+    id_comp = id_dict[txt_button] # id соревнований к котормы переходим
+              ~~~~~~~^^^^^^^^^^^^
+KeyError: 'Д'

@@ -1,0 +1,7 @@
+2025-08-04 10:45:30,935 - ERROR - Необработанное исключение: TypeError: setText(self, a0: Optional[str]): first argument of unbound method must have type 'QMessageBox'
+2025-08-04 10:45:30,946 - ERROR - Трассировка стека:
+Traceback (most recent call last):
+  File "c:\Users\Alex\Competitions_TT_v1.1\main.py", line 301, in closeEvent
+    msgBox.setText("Вы нажали на крестик, уверены, что хотите уйти?\n")
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: setText(self, a0: Optional[str]): first argument of unbound method must have type 'QMessageBox'
