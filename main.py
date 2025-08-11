@@ -1283,6 +1283,7 @@ class StartWindow(QMainWindow, Ui_Form):
         result = msgBox.question(my_win, "", "Вы действительно хотите создать новые соревнования?",
                                  msgBox.Ok, msgBox.Cancel)
         if result == msgBox.Ok:
+            sex_list = ["man", "woman"]
             # gamer = ("Мальчики", "Девочки", "Юноши",
             #          "Девушки", "Юниоры", "Юниорки", "Мужчины", "Женщины")
             gamer = ("Мальчики и Девочки", "Юноши и Девушки", "Юниоры и Юниорки", "Мужчины и Женщины")
@@ -1297,9 +1298,11 @@ class StartWindow(QMainWindow, Ui_Form):
             id_title = t_id.id
             my_win.lineEdit_title_gamer.setText(gamer)
             db_r(gamer)
-            system = System(title_id=id_title, total_athletes=0, total_group=0, max_player=0, stage="", type_table="",
-                            page_vid="", label_string="", kol_game_string="", choice_flag=False, score_flag=5,
-                            visible_game=False, stage_exit="", mesta_exit=0, no_game="").save()
+            for n in range(0, 2): # создает в таблице -system- две строки с одинаковым title id и разными игроками
+                pol = sex_list[n]
+                system = System(title_id=id_title, total_athletes=0, total_group=0, max_player=0, stage="", type_table="",
+                                page_vid="", label_string="", kol_game_string="", choice_flag=False, score_flag=5,
+                                visible_game=False, stage_exit="", mesta_exit=0, no_game="", sex=pol).save()
             self.close()
             tab_enabled(id_title)
             my_win.show()
@@ -1696,7 +1699,6 @@ my_win.dateEdit_end.setDate(date.today())
 def button_comp_enabled():
     """После нажатия кнопок быстрого перехода включает вкладку наиболее необходимую"""
     sender = my_win.sender()
-    # sex = ["Девочки", "Девушки", "Юниорки", "Женщины"]
     # ===== переключает вид кнопок =========
     if sender == Button_turnir_1:
         txt_button = Button_turnir_1.text()
@@ -1704,27 +1706,13 @@ def button_comp_enabled():
     elif sender == Button_turnir_2:
         txt_button = Button_turnir_2.text()
         my_win.setStyleSheet("#MainWindow{background-color:lightpink}")
-    # elif sender == Button_turnir_3:
-    #     txt_button = Button_turnir_3.text()
-    # elif sender == Button_turnir_4:
-    #     txt_button = Button_turnir_4.text()
-    # else:
-
-    # id_dict = {}
-    # button_list = [Button_turnir_1, Button_turnir_2, Button_turnir_3, Button_turnir_4]
-    button_list = [Button_turnir_1, Button_turnir_2]
+    pol = activ_button_turnir()
+    # button_list = [Button_turnir_1, Button_turnir_2]
     t = Title.get(Title.id == title_id())
     name_current = t.name # название текущих соревнований
     date_current = t.data_start # начало текущих соревнований
     titles = Title.select().where((Title.name == name_current) & (Title.data_start == date_current)) # кол-во соревнований на однаковую дату
-    # d = 0
-    # for j in titles:
-    #     id_tit = j.id
-    #     button_text = button_list[d].text()
-    #     id_dict[button_text] = id_tit
-    #     d += 1
 
-    # id_comp = id_dict[txt_button] # id соревнований к котормы переходим
     # ==== смена названия в меню -перейти к-
     full_name_current = t.full_name_comp # полное название текущих соревнований
     age_current = t.vozrast
@@ -1766,8 +1754,7 @@ def button_comp_enabled():
     gr_list = ["Предварительный"]
     pf_list = ["1-й полуфинал", "2-й полуфинал"]
     index_list = []
-    systems = System.select().where(System.title_id == id_title)
-    # if len(systems) == 1:
+    systems = System.select().where((System.title_id == id_title) & (System.sex == pol))
 
     for s in systems:
         flag = s.choice_flag
@@ -1795,7 +1782,7 @@ def button_comp_enabled():
         my_win.tabWidget_stage.setCurrentIndex(tab_index)
  
     tab_etap()
-    player_list = Player.select().where(Player.title_id == id_title)
+    player_list = Player.select().where((Player.title_id == id_title) & (Player.sex == pol))
     count_player = len(player_list)
     my_win.label_46.setText(f"Всего: {count_player} участников")
     
@@ -2342,6 +2329,7 @@ def title_pdf():
 
 def title_made():
     """создание титульного листа соревнования"""
+    # sex_list = ["man", "woman"]
     title_str = title_string()
     if my_win.Button_title_made.text() == "Редактировать":
         title_update()
@@ -2359,12 +2347,16 @@ def title_made():
     title = Title.select().order_by(Title.id.desc()).get()
 
     # получение последнего id системы соревнования
-    s = System.select().order_by(System.id.desc()).get()
+    # s = System.select().order_by(System.id.desc()).get()
     add_open_tab(tab_page="Участники")
-    with db:
-        System.create_table()
-        sys = System(id=s, title_id=title, total_athletes=0, total_group=0, max_player=0, stage="", page_vid="",
-                     label_string="", kol_game_string="", choice_flag=False, score_flag=5, visible_game=True, stage_exit="", mesta_exit="", no_game="").save()
+    # for p in range(0, 2):
+    #     # s = System.select().order_by(System.id.desc()).get()
+        # pol = sex_list[p]
+    # with db:
+    #         # System.create_table()
+    #     sys = System(title_id=title, total_athletes=0, total_group=0, max_player=0, stage="", page_vid="",
+    #                     label_string="", kol_game_string="", choice_flag=False, score_flag=5, visible_game=True, stage_exit="",
+    #                       mesta_exit="", no_game="", sex=pol).save()
 
 
 def data_title_string():
@@ -3095,16 +3087,30 @@ def debitor_R():
     fill_table(player_list)
 
 
+def activ_button_turnir():
+    """Определяет пол спортсмена по нажатию кнопки"""
+    button_list = [Button_turnir_1, Button_turnir_2]
+    for b in button_list:
+        font = b.font()
+        is_underlined = font.underline() # подчеркнут или нет текст, если True то да
+        if is_underlined is True:
+            pol = "man"
+        else:
+            pol = "woman"
+        return pol
+
+
 def add_player(): 
     """добавляет игрока в список и базу данных"""
     msgBox = QMessageBox()    
     flag = False
-    player_list = Player.select().where(Player.title_id == title_id())
+    pol = activ_button_turnir()
+    player_list = Player.select().where((Player.title_id == title_id()) & (Player.sex == pol))
     txt = my_win.Button_add_edit_player.text()
     count = len(player_list)
+    # pol = activ_button_turnir()
     pl_id = my_win.lineEdit_id.text()
     pl = my_win.lineEdit_Family_name.text()
-
     otc = my_win.lineEdit_otchestvo.text()
     bd = my_win.lineEdit_bday.text()
     rn = my_win.lineEdit_R.text()
@@ -3160,9 +3166,9 @@ def add_player():
     month = bd[3:5]
     year = bd[6:]
     bd_new = f"{year}-{month}-{day}"
-    flag_player_full = find_player_in_table_players_full(fam, name, ci=ct, bd=bd_new)
+    flag_player_full = find_player_in_table_players_full(fam, name, ci=ct, bd=bd_new) # ищет спортсмена в списке со всеми данными ()
     if flag_player_full is None:
-        player_full = Players_full(player=pl, bday=bd_new, city=ct, region=rg, razryad=rz, coach_id=idc, patronymic_id=idp).save()
+        player_full = Players_full(player=pl, bday=bd_new, city=ct, region=rg, razryad=rz, coach_id=idc, patronymic_id=idp, sex=pol).save()
     # ==== определяет завявка предварительная или нет
     title = Title.select().where(Title.id == title_id()).get()
     data_start = title.data_start
@@ -3182,7 +3188,7 @@ def add_player():
             bd_mod = f"{year}-{monh}-{days}"
             plr = Player(player=pl, bday=bd_mod, rank=rn, city=ct, region=rg,
                          razryad=rz, coach_id=idc, full_name=fn, mesto=ms, title_id=title_id(), pay_rejting=pay_R,
-                         comment=comment, coefficient_victories=0, total_game_player=0, total_win_game=0, patronymic_id=idp).save()
+                         comment=comment, coefficient_victories=0, total_game_player=0, total_win_game=0, patronymic_id=idp, sex=pol).save()
                          
         my_win.checkBox_6.setChecked(False)  # сбрасывает флажок -удаленные-
     else:  # просто редактирует игрока
@@ -3191,7 +3197,7 @@ def add_player():
             bd_new = format_date_for_db(str_date=bd)
             Coach.update(coach = ch).where(Coach.id == idc).execute()
             Player.update(player=pl, bday=bd_new, rank=rn, city = ct, region = rg, razryad = rz,
-                            full_name=fn, pay_rejting=pay_R, comment=comment, coach_id = idc, patronymic_id=idp).where(Player.id == pl_id).execute()
+                            full_name=fn, pay_rejting=pay_R, comment=comment, coach_id = idc, patronymic_id=idp, sex=pol).where(Player.id == pl_id).execute()
 
         elif txt == "Добавить":
             debt = "долг" if txt_edit == "Спортсмену необходимо оплатить рейтинг!" else ""
@@ -3201,14 +3207,14 @@ def add_player():
             with db:
                 players = Player(player=pl, bday=bd_new, rank=rn, city=ct, region=rg, razryad=rz,
                                 coach_id=idc, mesto="", full_name=fn, title_id=title_id(), pay_rejting=debt, comment="", 
-                                coefficient_victories=0, total_game_player=0, total_win_game=0, application=zayavka, patronymic_id=idp).save()
+                                coefficient_victories=0, total_game_player=0, total_win_game=0, application=zayavka, patronymic_id=idp, sex=pol).save()
             player_predzayavka = Player.select().where((Player.title_id == title_id()) & (Player.application == "предварительная"))
             count_pred = len(player_predzayavka)
             my_win.label_predzayavka.setText(f"По предзаявке: {count_pred} чел.")
             if debt == "долг":
                 debitor_R()            
             # =========
-            system = System.select().where(System.title_id == title_id())
+            system = System.select().where((System.title_id == title_id()) & (System.sex == pol))
             system_flag = ready_system() # проверка была создана система
             if system_flag is True:
                 result = msgBox.information(my_win, "", "Колличество спортсменов изменилось.\n"
@@ -3247,7 +3253,7 @@ def add_player():
                     count = len(system)
                     system_id = sys.id
                     athlet = sys.total_athletes
-                    System.update(total_athletes=athlet + 1).where(System.title_id == title_id()).execute()
+                    System.update(total_athletes=athlet + 1).where((System.title_id == title_id()) & (System.sex == pol)).execute()
                     if n == count:
                         System.update(max_player=System.max_player + 1).where((System.id == system_id) & (System.title_id == title_id())).execute()
 
@@ -3255,7 +3261,7 @@ def add_player():
         player_id = pl_id.id
 
         # ======== попробовать вставить одну строку в tableView
-    player_list = Player.select().where(Player.title_id == title_id())
+    player_list = Player.select().where((Player.title_id == title_id()) & (Player.sex == pol))
     fill_table(player_list)
     count = len(player_list)  # подсчитывает новое кол-во игроков
     my_win.label_46.setText(f"Всего: {count} участников")
@@ -18215,28 +18221,28 @@ def add_double_player_to_list():
 #     #     Player.update(region=reg).execute()
 #     print("Все записи обновлены")
 # =======        
-def proba():
-    myconn = pymysql.connect(host = "localhost", user = "root", passwd = "db_pass", database = "mysql_db") 
+# def proba():
+#     myconn = pymysql.connect(host = "localhost", user = "root", passwd = "db_pass", database = "mysql_db") 
     # создать таблицу
     
-    class Players_double(BaseModel):
-        player_1 = CharField(50)    
-        region_1 = CharField()
-        r_1 = IntegerField()
-        player_2 = CharField(50)
-        region_2 = CharField()
-        r_2 = IntegerField()
-        region_main = CharField()
-        r_sum = IntegerField()
-        double_vid = CharField(30)
-        title_id = ForeignKeyField(Title)
+    # class Players_double(BaseModel):
+    #     player_1 = CharField(50)    
+    #     region_1 = CharField()
+    #     r_1 = IntegerField()
+    #     player_2 = CharField(50)
+    #     region_2 = CharField()
+    #     r_2 = IntegerField()
+    #     region_main = CharField()
+    #     r_sum = IntegerField()
+    #     double_vid = CharField(30)
+    #     title_id = ForeignKeyField(Title)
     
-        class Meta:
-            db_table = "players_double"
-            order_by = "r_sum"
+    #     class Meta:
+    #         db_table = "players_double"
+    #         order_by = "r_sum"
 
-    db.create_tables([Players_double])
-    db.close()
+    # db.create_tables([Players_double])
+    # db.close()
      # ============ импорт новых данных в mysql =========
     # import glob
     # fname = QFileDialog.getOpenFileName(
@@ -18267,19 +18273,20 @@ def proba():
     # date_format='%Y-%m-%d'
     # )
 # =====================================================
- #     migrator = MySQLMigrator(db)
-#     # # no_game = TextField(default="")
-#     patronymic_id = IntegerField(Delete_player)  # новый столбец, его поле и значение по умолчанию
+    # migrator = MySQLMigrator(db)
+
     
 #     # # posev_super_final = ForeignKeyField(Choise, field=System.id, null=True)
 
-#     # # with db:
-#     # #     # migrate(migrator.drop_column('choices', 'posev_super_final')) # удаление столбца
-#     # #     # migrate(migrator.alter_column_type('system', 'mesta_exit', IntegerField()))
-#     # #     # migrate(migrator.rename_column('titles', 'kat_sek', 'kat_sec')) # Переименование столбца (таблица, старое название, новое название столбца)
-#     migrate(migrator.add_column('delete_players', 'patronymic_id', patronymic_id)) # Добавление столбца (таблица, столбец, повтор название столбца)
+    # with db.atomic():
 
-my_win.Button_proba.clicked.connect(proba) # запуск пробной функции
+        # migrate(migrator.drop_column('choices', 'posev_super_final')) # удаление столбца
+        # migrate(migrator.alter_column_type('system', 'mesta_exit', IntegerField()))
+        # migrate(migrator.rename_column('titles', 'kat_sek', 'kat_sec')) # Переименование столбца (таблица, старое название, новое название столбца)
+#         migrate(migrator.add_column('system', 'sex', CharField(max_length=10, null=True))) # Добавление столбца (таблица, столбец, повтор название столбца)
+#     db.close()
+
+# my_win.Button_proba.clicked.connect(proba) # запуск пробной функции
 
 # ===== переводит фокус на поле ввода счета в партии вкладки -группа-
 my_win.lineEdit_pl1_s1.returnPressed.connect(focus)

@@ -129,6 +129,7 @@ class Player(BaseModel):
     total_win_game = IntegerField()
     application = CharField(30)
     patronymic_id = ForeignKeyField(Patronymic)
+    sex = CharField(10)
    
     class Meta:
         db_table = "players"
@@ -142,7 +143,8 @@ class Players_full(BaseModel):
         razryad = CharField()
         coach_id = ForeignKeyField(Coach)
         patronymic_id = ForeignKeyField(Patronymic)
-    
+        sex = CharField(10)
+
         class Meta:
             db_table = "players_full"
             order_by = "player"
@@ -163,6 +165,7 @@ class System(BaseModel):
     stage_exit = CharField(15)
     mesta_exit = IntegerField()
     no_game = CharField(15)
+    sex = CharField(10)
 
     class Meta:
         db_table = "system"
@@ -216,6 +219,7 @@ class Delete_player(BaseModel):
     pay_rejting = CharField(50)
     comment = CharField()
     patronymic_id = IntegerField()
+    sex = CharField(10)
 
     class Meta:
         db_table = "delete_players"
@@ -263,6 +267,7 @@ class Players_double(BaseModel):
     r_sum = IntegerField(10)
     double_vid = CharField(10)
     title_id = ForeignKeyField(Title)
+    sex = CharField(10)
 
     class Meta:
         db_tables = "players_double"
