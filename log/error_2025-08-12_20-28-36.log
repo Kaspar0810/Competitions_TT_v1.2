@@ -1,0 +1,244 @@
+2025-08-12 20:28:43,124 - ERROR - Необработанное исключение: OperationalError: (1054, "Unknown column 't1.sex' in 'field list'")
+2025-08-12 20:28:43,125 - ERROR - Трассировка стека:
+Traceback (most recent call last):
+  File "C:\Users\Alex\Competitions_TT_v1.2\venv\Lib\site-packages\peewee.py", line 3322, in execute_sql
+    cursor.execute(sql, params or ())
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Alex\Competitions_TT_v1.2\venv\Lib\site-packages\pymysql\cursors.py", line 153, in execute
+    result = self._query(query)
+  File "C:\Users\Alex\Competitions_TT_v1.2\venv\Lib\site-packages\pymysql\cursors.py", line 322, in _query
+    conn.query(q)
+    ~~~~~~~~~~^^^
+  File "C:\Users\Alex\Competitions_TT_v1.2\venv\Lib\site-packages\pymysql\connections.py", line 563, in query
+    self._affected_rows = self._read_query_result(unbuffered=unbuffered)
+                          ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Alex\Competitions_TT_v1.2\venv\Lib\site-packages\pymysql\connections.py", line 825, in _read_query_result
+    result.read()
+    ~~~~~~~~~~~^^
+  File "C:\Users\Alex\Competitions_TT_v1.2\venv\Lib\site-packages\pymysql\connections.py", line 1199, in read
+    first_packet = self.connection._read_packet()
+  File "C:\Users\Alex\Competitions_TT_v1.2\venv\Lib\site-packages\pymysql\connections.py", line 775, in _read_packet
+    packet.raise_for_error()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Alex\Competitions_TT_v1.2\venv\Lib\site-packages\pymysql\protocol.py", line 219, in raise_for_error
+    err.raise_mysql_exception(self._data)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+  File "C:\Users\Alex\Competitions_TT_v1.2\venv\Lib\site-packages\pymysql\err.py", line 150, in raise_mysql_exception
+    raise errorclass(errno, errval)
+pymysql.err.OperationalError: (1054, "Unknown column 't1.sex' in 'field list'")
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "c:\Users\Alex\Competitions_TT_v1.2\main.py", line 3710, in tool_page
+    page()
+    ~~~~^^
+  File "c:\Users\Alex\Competitions_TT_v1.2\main.py", line 3730, in page
+    db_select_title()
+    ~~~~~~~~~~~~~~~^^
+  File "c:\Users\Alex\Competitions_TT_v1.2\main.py", line 2201, in db_select_title
+    tab_enabled(id_title)
+    ~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Alex\Competitions_TT_v1.2\main.py", line 1939, in tab_enabled
+    enabled_menu_after_choice()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "c:\Users\Alex\Competitions_TT_v1.2\main.py", line 1966, in enabled_menu_after_choice
+    for k in systems:
+             ^^^^^^^
+  File "C:\Users\Alex\Competitions_TT_v1.2\venv\Lib\site-packages\peewee.py", line 7285, in __iter__
+    self.execute()
+    ~~~~~~~~~~~~^^
+  File "C:\Users\Alex\Competitions_TT_v1.2\venv\Lib\site-packages\peewee.py", line 2036, in inner
+    return method(self, database, *args, **kwargs)
+  File "C:\Users\Alex\Competitions_TT_v1.2\venv\Lib\site-packages\peewee.py", line 2107, in execute
+    return self._execute(database)
+           ~~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\Alex\Competitions_TT_v1.2\venv\Lib\site-packages\peewee.py", line 2280, in _execute
+    cursor = database.execute(self)
+  File "C:\Users\Alex\Competitions_TT_v1.2\venv\Lib\site-packages\peewee.py", line 3330, in execute
+    return self.execute_sql(sql, params)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\Alex\Competitions_TT_v1.2\venv\Lib\site-packages\peewee.py", line 3320, in execute_sql
+    with __exception_wrapper__:
+         ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Alex\Competitions_TT_v1.2\venv\Lib\site-packages\peewee.py", line 3088, in __exit__
+    reraise(new_type, new_type(exc_value, *exc_args), traceback)
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Alex\Competitions_TT_v1.2\venv\Lib\site-packages\peewee.py", line 196, in reraise
+    raise value.with_traceback(tb)
+  File "C:\Users\Alex\Competitions_TT_v1.2\venv\Lib\site-packages\peewee.py", line 3322, in execute_sql
+    cursor.execute(sql, params or ())
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Alex\Competitions_TT_v1.2\venv\Lib\site-packages\pymysql\cursors.py", line 153, in execute
+    result = self._query(query)
+  File "C:\Users\Alex\Competitions_TT_v1.2\venv\Lib\site-packages\pymysql\cursors.py", line 322, in _query
+    conn.query(q)
+    ~~~~~~~~~~^^^
+  File "C:\Users\Alex\Competitions_TT_v1.2\venv\Lib\site-packages\pymysql\connections.py", line 563, in query
+    self._affected_rows = self._read_query_result(unbuffered=unbuffered)
+                          ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Alex\Competitions_TT_v1.2\venv\Lib\site-packages\pymysql\connections.py", line 825, in _read_query_result
+    result.read()
+    ~~~~~~~~~~~^^
+  File "C:\Users\Alex\Competitions_TT_v1.2\venv\Lib\site-packages\pymysql\connections.py", line 1199, in read
+    first_packet = self.connection._read_packet()
+  File "C:\Users\Alex\Competitions_TT_v1.2\venv\Lib\site-packages\pymysql\connections.py", line 775, in _read_packet
+    packet.raise_for_error()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Alex\Competitions_TT_v1.2\venv\Lib\site-packages\pymysql\protocol.py", line 219, in raise_for_error
+    err.raise_mysql_exception(self._data)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+  File "C:\Users\Alex\Competitions_TT_v1.2\venv\Lib\site-packages\pymysql\err.py", line 150, in raise_mysql_exception
+    raise errorclass(errno, errval)
+peewee.OperationalError: (1054, "Unknown column 't1.sex' in 'field list'")
+2025-08-12 20:28:43,334 - ERROR - Необработанное исключение: OperationalError: (1054, "Unknown column 't1.sex' in 'field list'")
+2025-08-12 20:28:43,335 - ERROR - Трассировка стека:
+Traceback (most recent call last):
+  File "C:\Users\Alex\Competitions_TT_v1.2\venv\Lib\site-packages\peewee.py", line 3322, in execute_sql
+    cursor.execute(sql, params or ())
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Alex\Competitions_TT_v1.2\venv\Lib\site-packages\pymysql\cursors.py", line 153, in execute
+    result = self._query(query)
+  File "C:\Users\Alex\Competitions_TT_v1.2\venv\Lib\site-packages\pymysql\cursors.py", line 322, in _query
+    conn.query(q)
+    ~~~~~~~~~~^^^
+  File "C:\Users\Alex\Competitions_TT_v1.2\venv\Lib\site-packages\pymysql\connections.py", line 563, in query
+    self._affected_rows = self._read_query_result(unbuffered=unbuffered)
+                          ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Alex\Competitions_TT_v1.2\venv\Lib\site-packages\pymysql\connections.py", line 825, in _read_query_result
+    result.read()
+    ~~~~~~~~~~~^^
+  File "C:\Users\Alex\Competitions_TT_v1.2\venv\Lib\site-packages\pymysql\connections.py", line 1199, in read
+    first_packet = self.connection._read_packet()
+  File "C:\Users\Alex\Competitions_TT_v1.2\venv\Lib\site-packages\pymysql\connections.py", line 775, in _read_packet
+    packet.raise_for_error()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Alex\Competitions_TT_v1.2\venv\Lib\site-packages\pymysql\protocol.py", line 219, in raise_for_error
+    err.raise_mysql_exception(self._data)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+  File "C:\Users\Alex\Competitions_TT_v1.2\venv\Lib\site-packages\pymysql\err.py", line 150, in raise_mysql_exception
+    raise errorclass(errno, errval)
+pymysql.err.OperationalError: (1054, "Unknown column 't1.sex' in 'field list'")
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "c:\Users\Alex\Competitions_TT_v1.2\main.py", line 1255, in last_comp
+    id_title = db_select_title()
+  File "c:\Users\Alex\Competitions_TT_v1.2\main.py", line 2201, in db_select_title
+    tab_enabled(id_title)
+    ~~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Alex\Competitions_TT_v1.2\main.py", line 1939, in tab_enabled
+    enabled_menu_after_choice()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "c:\Users\Alex\Competitions_TT_v1.2\main.py", line 1966, in enabled_menu_after_choice
+    for k in systems:
+             ^^^^^^^
+  File "C:\Users\Alex\Competitions_TT_v1.2\venv\Lib\site-packages\peewee.py", line 7285, in __iter__
+    self.execute()
+    ~~~~~~~~~~~~^^
+  File "C:\Users\Alex\Competitions_TT_v1.2\venv\Lib\site-packages\peewee.py", line 2036, in inner
+    return method(self, database, *args, **kwargs)
+  File "C:\Users\Alex\Competitions_TT_v1.2\venv\Lib\site-packages\peewee.py", line 2107, in execute
+    return self._execute(database)
+           ~~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\Alex\Competitions_TT_v1.2\venv\Lib\site-packages\peewee.py", line 2280, in _execute
+    cursor = database.execute(self)
+  File "C:\Users\Alex\Competitions_TT_v1.2\venv\Lib\site-packages\peewee.py", line 3330, in execute
+    return self.execute_sql(sql, params)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\Alex\Competitions_TT_v1.2\venv\Lib\site-packages\peewee.py", line 3320, in execute_sql
+    with __exception_wrapper__:
+         ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Alex\Competitions_TT_v1.2\venv\Lib\site-packages\peewee.py", line 3088, in __exit__
+    reraise(new_type, new_type(exc_value, *exc_args), traceback)
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Alex\Competitions_TT_v1.2\venv\Lib\site-packages\peewee.py", line 196, in reraise
+    raise value.with_traceback(tb)
+  File "C:\Users\Alex\Competitions_TT_v1.2\venv\Lib\site-packages\peewee.py", line 3322, in execute_sql
+    cursor.execute(sql, params or ())
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Alex\Competitions_TT_v1.2\venv\Lib\site-packages\pymysql\cursors.py", line 153, in execute
+    result = self._query(query)
+  File "C:\Users\Alex\Competitions_TT_v1.2\venv\Lib\site-packages\pymysql\cursors.py", line 322, in _query
+    conn.query(q)
+    ~~~~~~~~~~^^^
+  File "C:\Users\Alex\Competitions_TT_v1.2\venv\Lib\site-packages\pymysql\connections.py", line 563, in query
+    self._affected_rows = self._read_query_result(unbuffered=unbuffered)
+                          ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Alex\Competitions_TT_v1.2\venv\Lib\site-packages\pymysql\connections.py", line 825, in _read_query_result
+    result.read()
+    ~~~~~~~~~~~^^
+  File "C:\Users\Alex\Competitions_TT_v1.2\venv\Lib\site-packages\pymysql\connections.py", line 1199, in read
+    first_packet = self.connection._read_packet()
+  File "C:\Users\Alex\Competitions_TT_v1.2\venv\Lib\site-packages\pymysql\connections.py", line 775, in _read_packet
+    packet.raise_for_error()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Alex\Competitions_TT_v1.2\venv\Lib\site-packages\pymysql\protocol.py", line 219, in raise_for_error
+    err.raise_mysql_exception(self._data)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+  File "C:\Users\Alex\Competitions_TT_v1.2\venv\Lib\site-packages\pymysql\err.py", line 150, in raise_mysql_exception
+    raise errorclass(errno, errval)
+peewee.OperationalError: (1054, "Unknown column 't1.sex' in 'field list'")
+2025-08-12 20:28:54,783 - ERROR - Необработанное исключение: TitleDoesNotExist: <Model: Title> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`sredi`, `t1`.`vozrast`, `t1`.`data_start`, `t1`.`data_end`, `t1`.`mesto`, `t1`.`referee`, `t1`.`kat_ref`, `t1`.`secretary`, `t1`.`kat_sec`, `t1`.`gamer`, `t1`.`full_name_comp`, `t1`.`pdf_comp`, `t1`.`short_name_comp`, `t1`.`tab_enabled`, `t1`.`multiregion`, `t1`.`perenos`, `t1`.`otchestvo` FROM `titles` AS `t1` WHERE ((`t1`.`full_name_comp` = %s) AND (`t1`.`vozrast` = %s)) LIMIT %s OFFSET %s
+Params: ['Тест.Юноши и Девушки', 'до 16 лет', 1, 0]
+2025-08-12 20:28:54,784 - ERROR - Трассировка стека:
+Traceback (most recent call last):
+  File "C:\Users\Alex\Competitions_TT_v1.2\venv\Lib\site-packages\peewee.py", line 7295, in get
+    return clone.execute(database)[0]
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^
+  File "C:\Users\Alex\Competitions_TT_v1.2\venv\Lib\site-packages\peewee.py", line 4581, in __getitem__
+    return self.row_cache[item]
+           ~~~~~~~~~~~~~~^^^^^^
+IndexError: list index out of range
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "c:\Users\Alex\Competitions_TT_v1.2\main.py", line 1279, in open
+    go_to()
+    ~~~~~^^
+  File "c:\Users\Alex\Competitions_TT_v1.2\main.py", line 2116, in go_to
+    titles = Title.get((Title.full_name_comp == full_name) & (Title.vozrast == age))
+  File "C:\Users\Alex\Competitions_TT_v1.2\venv\Lib\site-packages\peewee.py", line 6838, in get
+    return sq.get()
+           ~~~~~~^^
+  File "C:\Users\Alex\Competitions_TT_v1.2\venv\Lib\site-packages\peewee.py", line 7298, in get
+    raise self.model.DoesNotExist('%s instance matching query does '
+                                  'not exist:\nSQL: %s\nParams: %s' %
+                                  (clone.model, sql, params))
+models.TitleDoesNotExist: <Model: Title> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`sredi`, `t1`.`vozrast`, `t1`.`data_start`, `t1`.`data_end`, `t1`.`mesto`, `t1`.`referee`, `t1`.`kat_ref`, `t1`.`secretary`, `t1`.`kat_sec`, `t1`.`gamer`, `t1`.`full_name_comp`, `t1`.`pdf_comp`, `t1`.`short_name_comp`, `t1`.`tab_enabled`, `t1`.`multiregion`, `t1`.`perenos`, `t1`.`otchestvo` FROM `titles` AS `t1` WHERE ((`t1`.`full_name_comp` = %s) AND (`t1`.`vozrast` = %s)) LIMIT %s OFFSET %s
+Params: ['Тест.Юноши и Девушки', 'до 16 лет', 1, 0]
+2025-08-12 20:29:12,402 - ERROR - Необработанное исключение: TitleDoesNotExist: <Model: Title> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`sredi`, `t1`.`vozrast`, `t1`.`data_start`, `t1`.`data_end`, `t1`.`mesto`, `t1`.`referee`, `t1`.`kat_ref`, `t1`.`secretary`, `t1`.`kat_sec`, `t1`.`gamer`, `t1`.`full_name_comp`, `t1`.`pdf_comp`, `t1`.`short_name_comp`, `t1`.`tab_enabled`, `t1`.`multiregion`, `t1`.`perenos`, `t1`.`otchestvo` FROM `titles` AS `t1` WHERE (((`t1`.`name` = %s) AND (`t1`.`gamer` = %s)) AND ((`t1`.`data_start` = %s) AND (`t1`.`vozrast` = %s))) LIMIT %s OFFSET %s
+Params: ['Тест', 'Юноши и Девушки', datetime.date(2025, 8, 12), 'до 16 лет', 1, 0]
+2025-08-12 20:29:12,404 - ERROR - Трассировка стека:
+Traceback (most recent call last):
+  File "C:\Users\Alex\Competitions_TT_v1.2\venv\Lib\site-packages\peewee.py", line 7295, in get
+    return clone.execute(database)[0]
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^
+  File "C:\Users\Alex\Competitions_TT_v1.2\venv\Lib\site-packages\peewee.py", line 4581, in __getitem__
+    return self.row_cache[item]
+           ~~~~~~~~~~~~~~^^^^^^
+IndexError: list index out of range
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "c:\Users\Alex\Competitions_TT_v1.2\main.py", line 3710, in tool_page
+    page()
+    ~~~~^^
+  File "c:\Users\Alex\Competitions_TT_v1.2\main.py", line 3718, in page
+    sf = System.select().where((System.title_id == title_id() & System.sex == pol))
+                                                   ~~~~~~~~^^
+  File "c:\Users\Alex\Competitions_TT_v1.2\main.py", line 12009, in title_id
+    titles = titles_data.select().where((Title.data_start == data) & (Title.vozrast == age)).get()
+  File "C:\Users\Alex\Competitions_TT_v1.2\venv\Lib\site-packages\peewee.py", line 7298, in get
+    raise self.model.DoesNotExist('%s instance matching query does '
+                                  'not exist:\nSQL: %s\nParams: %s' %
+                                  (clone.model, sql, params))
+models.TitleDoesNotExist: <Model: Title> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`sredi`, `t1`.`vozrast`, `t1`.`data_start`, `t1`.`data_end`, `t1`.`mesto`, `t1`.`referee`, `t1`.`kat_ref`, `t1`.`secretary`, `t1`.`kat_sec`, `t1`.`gamer`, `t1`.`full_name_comp`, `t1`.`pdf_comp`, `t1`.`short_name_comp`, `t1`.`tab_enabled`, `t1`.`multiregion`, `t1`.`perenos`, `t1`.`otchestvo` FROM `titles` AS `t1` WHERE (((`t1`.`name` = %s) AND (`t1`.`gamer` = %s)) AND ((`t1`.`data_start` = %s) AND (`t1`.`vozrast` = %s))) LIMIT %s OFFSET %s
+Params: ['Тест', 'Юноши и Девушки', datetime.date(2025, 8, 12), 'до 16 лет', 1, 0]

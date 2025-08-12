@@ -1,0 +1,15 @@
+2025-08-12 20:29:46,471 - ERROR - Необработанное исключение: ValueError: invalid literal for int() with base 10: ''
+2025-08-12 20:29:46,471 - ERROR - Трассировка стека:
+Traceback (most recent call last):
+  File "c:\Users\Alex\Competitions_TT_v1.2\main.py", line 3710, in tool_page
+    page()
+    ~~~~^^
+  File "c:\Users\Alex\Competitions_TT_v1.2\main.py", line 3881, in page
+    number_games = int(txt[:t])
+ValueError: invalid literal for int() with base 10: ''
+2025-08-12 20:29:53,969 - ERROR - Необработанное исключение: ValueError: invalid literal for int() with base 10: ''
+2025-08-12 20:29:53,969 - ERROR - Трассировка стека:
+Traceback (most recent call last):
+  File "c:\Users\Alex\Competitions_TT_v1.2\main.py", line 10729, in etap_made
+    number = int(kol_game_str[:zn]) # переводит строку кол-во игр в числа и записывает в списки
+ValueError: invalid literal for int() with base 10: ''
