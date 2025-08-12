@@ -296,29 +296,32 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def closeEvent(self, event):
         # Создание бэкап DB при закрытии формы -main- по нажатию на крестик
         sender = my_win.sender()
-        msgBox = QMessageBox()
-        msgBox.setWindowTitle("Закрыть окно и выйти.")
-        msgBox.setText("Сделать копию DB с коментарием, нажмите -Да-\n"
-                       "Просто выйти, нажмите -Нет-\n"
-                       "Отменить, нажмите -Отмена-\n")
-        btn_yes = QPushButton("Да")
-        btn_no = QPushButton("Нет")
-        btn_cancel = QPushButton("Отмена")
-        # добавили кнопки на диалоговое окно
-        msgBox.addButton(btn_yes, QMessageBox.YesRole)
-        msgBox.addButton(btn_no, QMessageBox.NoRole)
-        msgBox.addButton(btn_cancel, QMessageBox.RejectRole)
-        # показывает диалог и ждем выбора
-        ret = msgBox.exec()
-        # обрабатваем результат
-        if msgBox.clickedButton() == btn_yes:
-            flag  = 1
-            exit_comp(flag)
-        elif msgBox.clickedButton() == btn_no:
+        if sender is None:
+            msgBox = QMessageBox()
+            msgBox.setWindowTitle("Закрыть окно и выйти.")
+            msgBox.setText("Сделать копию DB с коментарием, нажмите -Да-\n"
+                        "Просто выйти, нажмите -Нет-\n"
+                        "Отменить, нажмите -Отмена-\n")
+            btn_yes = QPushButton("Да")
+            btn_no = QPushButton("Нет")
+            btn_cancel = QPushButton("Отмена")
+            # добавили кнопки на диалоговое окно
+            msgBox.addButton(btn_yes, QMessageBox.YesRole)
+            msgBox.addButton(btn_no, QMessageBox.NoRole)
+            msgBox.addButton(btn_cancel, QMessageBox.RejectRole)
+            # показывает диалог и ждем выбора
+            ret = msgBox.exec()
+            # обрабатваем результат
+            if msgBox.clickedButton() == btn_yes:
+                flag  = 1
+                exit_comp(flag)
+            elif msgBox.clickedButton() == btn_no:
+                return
+            elif msgBox.clickedButton() == btn_cancel:
+                event.ignore()
+        else:
             return
-        elif msgBox.clickedButton() == btn_cancel:
-            event.ignore()
-
+        
     # ====== создание строки меню ===========
     def _createMenuBar(self):
         menuBar = self.menuBar()
@@ -1780,21 +1783,15 @@ def button_comp_enabled():
     else:
         my_win.tabWidget.setCurrentIndex(3)  # открывает вкладку -результаты-
         my_win.tabWidget_stage.setCurrentIndex(tab_index)
- 
-    tab_etap()
+    if flag is True:
+        tab_etap()
     player_list = Player.select().where((Player.title_id == id_title) & (Player.sex == pol))
     count_player = len(player_list)
     my_win.label_46.setText(f"Всего: {count_player} участников")
     
     list_player_pdf(player_list)
     fir_window.load_old()
-    # смена цвета фона формы в зависимости от пола играющих
-    # # if gamer in sex:
-    # if txt_button == "Д":    
-    #     my_win.setStyleSheet("#MainWindow{background-color:lightpink}")
-    # else:
-    #     my_win.setStyleSheet("#MainWindow{background-color:lightblue}")
-    # # fill_table(player_list)
+    fill_table(player_list)
 
 
 def tab_enabled(id_title):
@@ -2414,13 +2411,14 @@ def clear_filter_rejting_list():
 def find_in_rlist():
     """при создании списка участников ищет спортсмена в текущем R-листе"""
     tb = my_win.tabWidget.currentIndex()
+    pol = activ_button_turnir()
     if my_win.checkBox_find_player.isChecked():
         find_in_player_list()
     else:
         r_data_m = [R_list_m, R1_list_m]
         r_data_w = [R_list_d, R1_list_d]
         t_id = Title.get(Title.id == title_id())
-        gamer = t_id.gamer
+        # gamer = t_id.gamer
         my_win.listWidget.clear()
         if tb == 6:
             cur_index = my_win.comboBox_choice_R.currentIndex()
@@ -2439,7 +2437,8 @@ def find_in_rlist():
                 txt = f"{family} {name}"
         else:
             txt = txt.capitalize()  # Переводит первую букву в заглавную
-        if gamer == "Девочки" or gamer == "Девушки" or gamer == "Юниорки"or gamer == "Женщины":
+        # if gamer == "Девочки" or gamer == "Девушки" or gamer == "Юниорки"or gamer == "Женщины":
+        if pol == "woman":
             if tb == 6 and cur_index == 0:
                 r_data = r_data_w[0] # текущий рейтинг
             elif tb == 6 and cur_index == 1:
@@ -2956,8 +2955,9 @@ def _fill_table(player_list): # ============== вариант эксперемн
 def fill_table_R_list():
     """заполняет таблицу списком из текущего рейтинг листа"""
     title = Title.select().where(Title.id == title_id()).get()
-    gamer = title.gamer
-    if gamer == "Девочки" or gamer == "Девушки" or gamer == "Юниорки" or gamer == "Женщины":
+    # gamer = title.gamer
+    pol = activ_button_turnir()
+    if pol == "woman":
         player_list = R_list_d.select().order_by(R_list_d.r_fname)
     else:
         player_list = R_list_m.select().order_by(R_list_m.r_fname)
@@ -3052,7 +3052,8 @@ def fill_table_after_choice():
 
 def debitor_R():
     """показывает список должников оплаты рейтинга"""
-    player_list = Player.select().where(Player.title_id == title_id())
+    pol = activ_button_turnir()
+    player_list = Player.select().where((Player.title_id == title_id()) & (Player.sex == pol))
     player_debitor_R = player_list.select().where(Player.pay_rejting == "долг").order_by(Player.player)
     dolg = len(player_debitor_R)
     if dolg == 1:
@@ -3208,7 +3209,8 @@ def add_player():
                 players = Player(player=pl, bday=bd_new, rank=rn, city=ct, region=rg, razryad=rz,
                                 coach_id=idc, mesto="", full_name=fn, title_id=title_id(), pay_rejting=debt, comment="", 
                                 coefficient_victories=0, total_game_player=0, total_win_game=0, application=zayavka, patronymic_id=idp, sex=pol).save()
-            player_predzayavka = Player.select().where((Player.title_id == title_id()) & (Player.application == "предварительная"))
+            predzayavka = Player.select().where((Player.title_id == title_id()) & (Player.application == "предварительная"))
+            player_predzayavka = predzayavka.select().where(Player.sex == pol)
             count_pred = len(player_predzayavka)
             my_win.label_predzayavka.setText(f"По предзаявке: {count_pred} чел.")
             if debt == "долг":
@@ -3284,6 +3286,7 @@ def add_player():
 def find_otchestvo():
     """ищет отчество в базе данных"""
     txt = my_win.label_63.text()
+    pol = activ_button_turnir()
     my_win.listWidget.clear()
     if txt == "":
         return
@@ -3291,8 +3294,7 @@ def find_otchestvo():
         sex_list = ["Девочки", "Девушки", "Юниорки", "Женщины"]
         my_win.label_63.setText("Отчество")
         titles = Title.select().where(Title.id == title_id()).get()
-        pol = titles.gamer
-        sex = "w" if pol in sex_list else "m"
+        sex = "w" if pol == "woman" else "m"
         otc = my_win.lineEdit_otchestvo.text()
         otc = otc.capitalize()  # Переводит первую букву в заглавную
         otchestvo_list = Patronymic.select()
@@ -3617,8 +3619,9 @@ def tab_etap():
     """Включает или выключает вкладки на странице -Результаты-"""
     stage_list = []
     tab_etap = my_win.tabWidget_stage.currentIndex()
-    results = Result.select().where(Result.title_id == title_id())    
-    systems = System.select().where(System.title_id == title_id())
+    pol = activ_button_turnir()
+    results = Result.select().where(Result.title_id == title_id() & (Player.sex == pol))    
+    systems = System.select().where(System.title_id == title_id() & (Player.sex == pol))
     for st in systems:
         stage = st.stage
         stage_list.append(stage)
@@ -3712,6 +3715,7 @@ def page():
     msgBox = QMessageBox()
     tb = my_win.toolBox.currentIndex()
     sf = System.select().where(System.title_id == title_id())
+    pol = activ_button_turnir()
     if tb == 0: # -титул-    
         my_win.resize(1110, 750)
         my_win.tabWidget_2.setGeometry(QtCore.QRect(260, 290, 841, 411)) # (точка слева, точка сверху, ширина, высота)
@@ -3751,10 +3755,10 @@ def page():
         my_win.Button_pay_R.setEnabled(False)
         my_win.Button_add_edit_player.setText("Добавить")
         my_win.statusbar.showMessage("Список участников соревнований", 5000)
-        player_list = Player.select().where((Player.title_id == title_id()) & (Player.bday != "0000-00-00"))
-
-        player_debitor_R = Player.select().where((Player.title_id == title_id()) & (Player.pay_rejting == "долг"))
-        player_predzayavka = Player.select().where((Player.title_id == title_id()) & (Player.application == "предварительная"))
+        # player_list = Player.select().where((Player.title_id == title_id()) & (Player.bday != "0000-00-00"))
+        player_list = Player.select().where((Player.title_id == title_id()) & (Player.bday != "0000-00-00") & (Player.sex == pol))
+        player_debitor_R = Player.select().where((Player.title_id == title_id()) & (Player.pay_rejting == "долг") & (Player.sex == pol))
+        player_predzayavka = Player.select().where((Player.title_id == title_id()) & (Player.application == "предварительная") & (Player.sex == pol))
         count_debitor_R = len(player_debitor_R)
         count_pred = len(player_predzayavka)
         num_debitor_1 = [1]
@@ -3791,7 +3795,7 @@ def page():
         result_played = result.select().where(Result.winner != "")
         count_result = len(result_played)
 
-        player_list_main = Player.select().where((Player.title_id == title_id()) & (Player.bday != "0000-00-00"))
+        player_list_main = Player.select().where((Player.title_id == title_id()) & (Player.bday != "0000-00-00") & (Player.sex == pol))
         count = len(player_list_main)
         my_win.label_8.setText(f"Всего участников: {str(count)} человек")
         my_win.label_52.setText(f"Всего сыграно: {count_result} игр.")
@@ -4270,11 +4274,12 @@ def add_patronymic():
 
 def find_player():
     """Установка курсора в строку поиска спортсмена в загруженном списке"""
+    pol = activ_button_turnir()
     if my_win.checkBox_find_player.isChecked():
         my_win.lineEdit_Family_name.setFocus()
     else:
         my_win.lineEdit_Family_name.clear()
-        player_list = Player.select().where(Player.title_id == title_id())
+        player_list = Player.select().where((Player.title_id == title_id()) & (Player.sex == pol))
         fill_table(player_list) 
 
 
@@ -4304,8 +4309,9 @@ def find_player_on_tab_system():
 def sort():
     """сортировка таблицы QtableView (по рейтингу или по алфавиту)"""
     sender = my_win.sender()  # сигнал от кнопки
+    pol = activ_button_turnir()
     signal_button_list = [my_win.Button_sort_R, my_win.Button_sort_Name, my_win.Button_sort_mesto]
-    pl_list = Player.select().where((Player.title_id == title_id()) & (Player.bday != "0000-00-00")) # добавил отделить строки с "X"
+    pl_list = Player.select().where((Player.title_id == title_id()) & (Player.bday != "0000-00-00") & (Player.sex == pol)) # добавил отделить строки с "X"
     if sender == my_win.Button_sort_R:  # в зависимости от сигала кнопки идет сортировка
         player_list = pl_list.select().where(Player.title_id == title_id()).order_by(Player.rank.desc())  # сортировка по рейтингу
     elif sender == my_win.Button_sort_Name:
@@ -6428,7 +6434,8 @@ def change_city_from_region():
 def filter_player_list(sender):
     """фильтрация списка участников по областям, тренерам, городам"""
     sender = my_win.sender()
-    player = Player.select().where(Player.title_id == title_id())
+    pol = activ_button_turnir()
+    player = Player.select().where((Player.title_id == title_id()) & (Player.sex == pol))
     if sender == my_win.Button_fltr_list: # кнопка применить 
         region = my_win.comboBox_fltr_region.currentText()
         city = my_win.comboBox_fltr_city.currentText()
@@ -6453,24 +6460,24 @@ def filter_player_list(sender):
             region = my_win.comboBox_fltr_region.currentText()
             my_win.Button_app.setEnabled(True)
             if region != "":
-                player_list = player.select().where((Player.application == "предварительная") & (Player.region == region))
+                player_list = player.select().where((Player.application == "предварительная") & (Player.region == region) & (Player.sex == pol))
             else:
-                player_list = player.select().where(Player.application == "предварительная")
+                player_list = player.select().where((Player.application == "предварительная") & (Player.sex == pol))
             count = len(player_list)
         else:
             my_win.Button_app.setEnabled(False)
             my_win.textEdit.clear()
-            player_list_pred = player.select().where(Player.application == "предварительная")
+            player_list_pred = player.select().where((Player.application == "предварительная") & (Player.sex == pol))
             count = len(player_list_pred)
-            player_list = Player.select().where(Player.title_id == title_id())
+            player_list = Player.select().where((Player.title_id == title_id()) & (Player.sex == pol))
     elif sender == my_win.Button_reset_fltr_list:
-        player_list = Player.select().where(Player.title_id == title_id())
+        player_list = Player.select().where((Player.title_id == title_id()) & (Player.sex == pol))
         my_win.comboBox_fltr_region.setCurrentIndex(0)
         my_win.comboBox_fltr_city.setCurrentIndex(0)
         my_win.comboBox_fltr_coach.setCurrentIndex(0) 
         my_win.checkBox_15.setChecked(False)      
         load_comboBox_filter()
-    player_list_pred = player.select().where(Player.application == "предварительная")
+    player_list_pred = player.select().where((Player.application == "предварительная") & (Player.sex == pol))
     count = len(player_list_pred)    
     my_win.label_predzayavka.setText(f"По предзаявке {count} чел.")
     my_win.label_predzayavka.setStyleSheet("color: black")
@@ -6479,7 +6486,8 @@ def filter_player_list(sender):
 
 def find_in_player_list():
     """поиск спортсмена или тренера"""
-    player = Player.select().where(Player.title_id == title_id())
+    pol = activ_button_turnir()
+    player = Player.select().where((Player.title_id == title_id()) & (Player.sex == pol))
     txt = my_win.lineEdit_Family_name.text()
     if txt == "":
         my_win.textEdit.clear()
@@ -6928,14 +6936,14 @@ def control_winner_player(winner, loser):
 def check_real_player():
     """Изменяет спортсменов по предварительной заявке на реальных"""
     my_win.tabWidget.setCurrentIndex(1)
-
+    pol = activ_button_turnir()
     indices = my_win.tableView.selectionModel().selectedRows()
     for index in sorted(indices):
         rows = index.row()
         id_pl = my_win.tableView.model().index(rows, 0).data() # данные ячейки tableView
         app = Player.update(application="основная").where(Player.id == id_pl)
         app.execute()
-    player_list = Player.select().where((Player.title_id == title_id()) & (Player.application == "предварительная"))
+    player_list = Player.select().where((Player.title_id == title_id()) & (Player.application == "предварительная") & (Player.sex == pol)) 
     fill_table(player_list)
 
 
@@ -11585,9 +11593,10 @@ def checking_possibility_choice(stage):
 
 def del_player_table():
     """таблица удаленных игроков на данных соревнованиях"""
+    pol = activ_button_turnir()
     if my_win.checkBox_6.isChecked():
         my_win.Button_clear_del.setEnabled(True)
-        player_list = Delete_player.select().where(Delete_player.title_id == title_id())
+        player_list = Delete_player.select().where((Delete_player.title_id == title_id()) & (Delete_player.sex == pol))
         count = len(player_list)
         if count == 0:
             my_win.statusbar.showMessage(
@@ -11608,7 +11617,7 @@ def del_player_table():
             else:
                 my_win.Button_add_edit_player.setEnabled(False)
     else:
-        player_list = Player.select().where(Player.title_id == title_id())
+        player_list = Player.select().where((Player.title_id == title_id()) & (Player.sex == pol))
         fill_table(player_list)
         my_win.tableView.showColumn(8)
         my_win.Button_add_edit_player.setText("Добавить")
@@ -18221,9 +18230,9 @@ def add_double_player_to_list():
 #     #     Player.update(region=reg).execute()
 #     print("Все записи обновлены")
 # =======        
-# def proba():
-#     myconn = pymysql.connect(host = "localhost", user = "root", passwd = "db_pass", database = "mysql_db") 
-    # создать таблицу
+def proba():
+    myconn = pymysql.connect(host = "localhost", user = "root", passwd = "db_pass", database = "mysql_db") 
+#     # создать таблицу
     
     # class Players_double(BaseModel):
     #     player_1 = CharField(50)    
@@ -18273,20 +18282,20 @@ def add_double_player_to_list():
     # date_format='%Y-%m-%d'
     # )
 # =====================================================
-    # migrator = MySQLMigrator(db)
+    migrator = MySQLMigrator(db)
 
     
 #     # # posev_super_final = ForeignKeyField(Choise, field=System.id, null=True)
 
-    # with db.atomic():
+    with db.atomic():
 
         # migrate(migrator.drop_column('choices', 'posev_super_final')) # удаление столбца
         # migrate(migrator.alter_column_type('system', 'mesta_exit', IntegerField()))
         # migrate(migrator.rename_column('titles', 'kat_sek', 'kat_sec')) # Переименование столбца (таблица, старое название, новое название столбца)
-#         migrate(migrator.add_column('system', 'sex', CharField(max_length=10, null=True))) # Добавление столбца (таблица, столбец, повтор название столбца)
-#     db.close()
+        migrate(migrator.add_column('results', 'sex', CharField(max_length=10, null=True))) # Добавление столбца (таблица, столбец, повтор название столбца)
+    db.close()
 
-# my_win.Button_proba.clicked.connect(proba) # запуск пробной функции
+my_win.Button_proba.clicked.connect(proba) # запуск пробной функции
 
 # ===== переводит фокус на поле ввода счета в партии вкладки -группа-
 my_win.lineEdit_pl1_s1.returnPressed.connect(focus)

@@ -1,0 +1,13 @@
+2025-08-12 11:27:25,854 - ERROR - Необработанное исключение: NameError: name 'pol' is not defined
+2025-08-12 11:27:25,855 - ERROR - Трассировка стека:
+Traceback (most recent call last):
+  File "c:\Users\Alex\Competitions_TT_v1.2\main.py", line 678, in fast_change_comp
+    button_comp_enabled()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "c:\Users\Alex\Competitions_TT_v1.2\main.py", line 1784, in button_comp_enabled
+    tab_etap()
+    ~~~~~~~~^^
+  File "c:\Users\Alex\Competitions_TT_v1.2\main.py", line 3624, in tab_etap
+    results = Result.select().where(Result.title_id == title_id() & (Player.sex == pol))
+                                                                                   ^^^
+NameError: name 'pol' is not defined

@@ -201,6 +201,7 @@ class Choice(BaseModel):
     mesto_final = IntegerField(null=True)
     super_final = CharField(null=True)
     title_id = ForeignKeyField(Title)
+    sex = CharField(10)
 
     class Meta:
         db_table = "choices"
@@ -240,6 +241,7 @@ class Result(BaseModel):
     title_id = ForeignKeyField(Title)
     round = CharField(20)
     system_id = ForeignKeyField(System)
+    sex = CharField(10)
 
     class Meta:
         db_table = "results"
