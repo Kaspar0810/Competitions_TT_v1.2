@@ -2204,7 +2204,8 @@ def db_select_title():
 
 def system_made():
     """Заполняет таблицу система кол-во игроков, кол-во групп и прочее"""
-    systems  = System.select().where(System.title_id == title_id()).get()
+    pol = activ_button_turnir()
+    systems  = System.select().where((System.title_id == title_id()) & (System.sex == pol)).get()
     count_system = len(systems)  # получение количества записей (этапов) в системе
     sg = my_win.comboBox_table.currentText()
     page_v = my_win.comboBox_page_1.currentText()
@@ -3109,7 +3110,6 @@ def add_player():
     player_list = Player.select().where((Player.title_id == title_id()) & (Player.sex == pol))
     txt = my_win.Button_add_edit_player.text()
     count = len(player_list)
-    # pol = activ_button_turnir()
     pl_id = my_win.lineEdit_id.text()
     pl = my_win.lineEdit_Family_name.text()
     otc = my_win.lineEdit_otchestvo.text()
@@ -3714,8 +3714,8 @@ def page():
     """Изменяет вкладку toolBox в зависимости от вкладки tabWidget"""
     msgBox = QMessageBox()
     tb = my_win.toolBox.currentIndex()
-    sf = System.select().where(System.title_id == title_id())
     pol = activ_button_turnir()
+    sf = System.select().where((System.title_id == title_id() & System.sex == pol))  
     if tb == 0: # -титул-    
         my_win.resize(1110, 750)
         my_win.tabWidget_2.setGeometry(QtCore.QRect(260, 290, 841, 411)) # (точка слева, точка сверху, ширина, высота)
@@ -3755,7 +3755,7 @@ def page():
         my_win.Button_pay_R.setEnabled(False)
         my_win.Button_add_edit_player.setText("Добавить")
         my_win.statusbar.showMessage("Список участников соревнований", 5000)
-        # player_list = Player.select().where((Player.title_id == title_id()) & (Player.bday != "0000-00-00"))
+
         player_list = Player.select().where((Player.title_id == title_id()) & (Player.bday != "0000-00-00") & (Player.sex == pol))
         player_debitor_R = Player.select().where((Player.title_id == title_id()) & (Player.pay_rejting == "долг") & (Player.sex == pol))
         player_predzayavka = Player.select().where((Player.title_id == title_id()) & (Player.application == "предварительная") & (Player.sex == pol))
@@ -3791,7 +3791,7 @@ def page():
         my_win.checkBox_repeat_regions.setChecked(False)
     
         my_win.tableView.setEditTriggers(QAbstractItemView.NoEditTriggers) # запрет редактирования таблицы
-        result = Result.select().where(Result.title_id == title_id())
+        result = Result.select().where((Result.title_id == title_id()) & (Result.sex == pol))
         result_played = result.select().where(Result.winner != "")
         count_result = len(result_played)
 
@@ -4738,15 +4738,16 @@ def system_competition():
     msgBox = QMessageBox()
     sender = my_win.sender()
     system_etap_list = []
+    pol = activ_button_turnir()
     semifinal_etap_list = ["1-й полуфинал", "2-й полуфинал"]
     fin_etap_list = ["1-й финал", "2-й финал", "3-й финал", "4-й финал",
                             "5-й финал", "6-й финал", "7-й финал", "8-й финал", "9-й финал", "10-й финал", "Суперфинал"]
     tit = Title.get(Title.id == title_id())
-    systems = System.select().where(System.title_id == title_id())
+    systems = System.select().where((System.title_id == title_id()) & (System.sex == pol))
     for p in systems:
         etap = p.stage
         system_etap_list.append(etap)
-    gamer = tit.gamer
+    # gamer = tit.gamer
     id_title = tit.id
     # проверка что все спортсмены подтвердились
     flag_checking = checking_before_the_draw() # TRUE - подтверждены все спортсмены
@@ -5057,10 +5058,11 @@ def selection_of_the_draw_mode():
 def kol_player_in_group():
     """подсчет кол-во групп и человек в группах"""
     sender = my_win.sender()  # сигнал от кнопки
+    pol = activ_button_turnir()
     flag_visible = my_win.checkBox_visible_game.isChecked()
     kg = my_win.spinBox_kol_group.text()  # количество групп
     score_match = my_win.spinBox.text()
-    player_list = Player.select().where((Player.title_id == title_id()) & (Player.bday != '0000-00-00'))
+    player_list = Player.select().where((Player.title_id == title_id()) & (Player.bday != '0000-00-00') & (Player.sex == pol))
     type_table = "группы"
     count = len(player_list)  # количество записей в базе
     # остаток отделения, если 0, то участники равно делится на группы
@@ -5095,7 +5097,7 @@ def kol_player_in_group():
         my_win.comboBox_page_vid.setEnabled(False)
         my_win.spinBox_kol_group.hide()
         # ====== запись в таблицу db -system- первый этап
-        s = System.select().where(System.title_id == title_id()).get()
+        s = System.select().where((System.title_id == title_id()) & (System.sex == pol)).get()
         system = System.get(System.id == s)
         system.max_player = mp
         system.total_athletes = count
@@ -10483,8 +10485,9 @@ def change_player_between_group_after_draw():
 
 def choice_tbl_made():
     """создание таблицы жеребьевка, заполняет db списком участников для жеребьевки"""
-    players = Player.select().order_by(Player.rank.desc()).where((Player.title_id == title_id()) & (Player.bday != '0000-00-00'))
-    choice = Choice.select().where(Choice.title_id == title_id())
+    pol = activ_button_turnir()
+    players = Player.select().order_by(Player.rank.desc()).where((Player.title_id == title_id()) & (Player.bday != '0000-00-00') & (Player.sex == pol))
+    choice = Choice.select().where((Choice.title_id == title_id()) & (Choice.sex == pol))
     if len(choice) != 0:
         for i in choice:
             ch_d = Choice.get(Choice.id == i)
@@ -10497,7 +10500,7 @@ def choice_tbl_made():
         coachs =Coach.select().where(Coach.id == coach_id).get()
         coach = coachs.coach
         chc = Choice(player_choice=i, family=family, region=region, coach=coach, rank=rank,
-                    title_id=title_id()).save()
+                    title_id=title_id(), sex=pol).save()
 
 
 def filter_player_on_system():
@@ -11772,9 +11775,10 @@ def number_final(last_etap):
 def kol_player_in_final():
     """после выбора из комбобокс системы финала подсчитывает сколько игр в финале"""
     sender = my_win.sender()
+    pol = activ_button_turnir()
     pv = my_win.comboBox_page_vid.currentText()
     etap = my_win.comboBox_etap.currentText()
-    player = Player.select().where(Player.title_id == title_id())
+    player = Player.select().where((Player.title_id == title_id()) & (Player.sex == pol))
     count = len(player)
     fin = ""
     exit_stage = ""
@@ -18230,8 +18234,8 @@ def add_double_player_to_list():
 #     #     Player.update(region=reg).execute()
 #     print("Все записи обновлены")
 # =======        
-def proba():
-    myconn = pymysql.connect(host = "localhost", user = "root", passwd = "db_pass", database = "mysql_db") 
+# def proba():
+#     myconn = pymysql.connect(host = "localhost", user = "root", passwd = "db_pass", database = "mysql_db") 
 #     # создать таблицу
     
     # class Players_double(BaseModel):
@@ -18282,20 +18286,20 @@ def proba():
     # date_format='%Y-%m-%d'
     # )
 # =====================================================
-    migrator = MySQLMigrator(db)
+    # migrator = MySQLMigrator(db)
 
     
 #     # # posev_super_final = ForeignKeyField(Choise, field=System.id, null=True)
 
-    with db.atomic():
+    # with db.atomic():
 
         # migrate(migrator.drop_column('choices', 'posev_super_final')) # удаление столбца
         # migrate(migrator.alter_column_type('system', 'mesta_exit', IntegerField()))
         # migrate(migrator.rename_column('titles', 'kat_sek', 'kat_sec')) # Переименование столбца (таблица, старое название, новое название столбца)
-        migrate(migrator.add_column('results', 'sex', CharField(max_length=10, null=True))) # Добавление столбца (таблица, столбец, повтор название столбца)
-    db.close()
+    #     migrate(migrator.add_column('results', 'sex', CharField(max_length=10, null=True))) # Добавление столбца (таблица, столбец, повтор название столбца)
+    # db.close()
 
-my_win.Button_proba.clicked.connect(proba) # запуск пробной функции
+# my_win.Button_proba.clicked.connect(proba) # запуск пробной функции
 
 # ===== переводит фокус на поле ввода счета в партии вкладки -группа-
 my_win.lineEdit_pl1_s1.returnPressed.connect(focus)
