@@ -10690,7 +10690,8 @@ def etap_made(stage):
     """создание этапов соревнований"""
     titles = Title.select().where(Title.id == title_id()).get()
     id_title = titles.id
-    system = System.select().where(System.title_id == title_id())
+    pol = activ_button_turnir()
+    system = System.select().where((System.title_id == title_id()) & (System.sex == pol))
     for l in system:
         total_athletes = l.total_athletes
         break
@@ -10718,7 +10719,7 @@ def etap_made(stage):
     group_list = ["Предварительный", "1-й полуфинал", "2-й полуфинал"]  
     player_in_final = []
     # ====
-    systems = System.select().where(System.title_id == id_title)
+    systems = System.select().where((System.title_id == id_title) & (System.sex == pol))
     for k in systems:
         stage = k.stage
         pl_final = k.max_player
@@ -10751,11 +10752,12 @@ def total_game_table(exit_stage, kpt, fin, pv):
     """количество участников и кол-во игр"""
     msgBox = QMessageBox()
     sender = my_win.sender()
+    pol = activ_button_turnir()
     sum_player = [0]
     no_game3 = ""
     etap_text = my_win.comboBox_etap.currentText()
     flag_visible = my_win.checkBox_visible_game.isChecked()
-    system = System.select().where(System.title_id == title_id()) # находит system id последнего
+    system = System.select().where((System.title_id == title_id()) & (System.sex == pol))# находит system id последнего
     systems = system.select().where(System.stage == "Предварительный").get()
     total_athletes = systems.total_athletes
     total_gr = systems.total_group
@@ -10848,7 +10850,7 @@ def total_game_table(exit_stage, kpt, fin, pv):
         # ======
         system = System(title_id=title_id(), total_athletes=total_athletes, total_group=total_gr, kol_game_string=stroka_kol_game,
                         max_player=m_pl, stage=fin, type_table=type_table, page_vid=pv, label_string=str_setka,
-                        choice_flag=0, score_flag=score_match, visible_game=flag_visible, stage_exit=exit_stage, mesta_exit=kpt, no_game=no_game3).save()    
+                        choice_flag=0, score_flag=score_match, visible_game=flag_visible, stage_exit=exit_stage, mesta_exit=kpt, no_game=no_game3, sex=pol).save()    
         
         return [str_setka, player_in_final, total_athletes, stroka_kol_game]
 
@@ -11222,7 +11224,8 @@ def total_games_in_final_with_group_games(player_in_final, gr_pf, kpt):
 
 def numbers_of_games(cur_index, player_in_final, kpt):
     """подсчет количество игр в зависимости от системы"""
-    systems = System.select().where(System.title_id == title_id())
+    pol = activ_button_turnir()
+    systems = System.select().where((System.title_id == title_id()) & (System.sex == pol))
     system_etap = my_win.comboBox_etap.currentText() 
     if system_etap == "Предварительный":
         system = systems.select().where(System.stage == "Предварительный").get()
