@@ -1,0 +1,10 @@
+2025-08-13 15:27:23,896 - ERROR - Необработанное исключение: IndexError: list index out of range
+2025-08-13 15:27:23,896 - ERROR - Трассировка стека:
+Traceback (most recent call last):
+  File "c:\Users\Alex\Competitions_TT_v1.2\main.py", line 899, in choice
+    choice_gr_automat()
+    ~~~~~~~~~~~~~~~~~^^
+  File "c:\Users\Alex\Competitions_TT_v1.2\main.py", line 7942, in choice_gr_automat
+    region_id = reg_list[number_poseva]
+                ~~~~~~~~^^^^^^^^^^^^^^^
+IndexError: list index out of range

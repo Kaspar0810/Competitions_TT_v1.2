@@ -176,6 +176,7 @@ class Game_list(BaseModel):
     player_group = ForeignKeyField(Player)
     system_id = ForeignKeyField(System)
     title_id = ForeignKeyField(Title)
+    sex = CharField(10)
 
     class Meta:
         db_table = "game_lists"
