@@ -10788,9 +10788,14 @@ def total_game_table(exit_stage, kpt, fin, pv):
             str_setka = f"{gr_pf} {vt} по {kpt * 2} участника"
             total_gr = gr_pf
         else:
-            player_in_final_full = full_net_player(player_in_final)
+            if cur_index != 4:
+                player_in_final_full = full_net_player(player_in_final)
             str_setka = f"{vt} {player_in_final_full} участников" # пишет в базе данных полное кол-во игроков сетке
             total_gr = 0
+            # else:
+            #     player_in_final_full = full_net_player(player_in_final)
+            #     str_setka = f"{vt} {player_in_final_full} участников" # пишет в базе данных полное кол-во игроков сетке
+            #     total_gr = 0
  
         stroka_kol_game = f"{total_games} игр"
         # заполняет max_player в зависиости от кол игроков
@@ -12549,6 +12554,28 @@ def load_name_net_after_choice_for_wiev(fin):
         setka_32_made(fin)
 
 
+def nazvanie_pol():
+    """определяет для таблиц в пдф пол участников"""
+    gamer_list = [["Мальчики и Девочки"], ["Юноши и Девушки"], ["Юниоры и Юниорки"], ["Мужчины и Женщины"]]
+    titles = Title.select().where(Title.id == title_id()).get()
+    gamer = titles.gamer
+    for g in gamer_list:
+        if gamer == g[0]:
+            txt = g[0]
+            mark = txt.find(" ")
+            man = txt[:mark]
+            woman = txt[mark + 3:]
+            break
+    pol = activ_button_turnir()
+    if pol == "man":
+        sex = man
+    else:
+        sex = woman
+
+    return sex
+
+
+
 def table_made(pv, stage):
     """создание таблиц kg - количество групп(таблиц), g2 - наибольшое кол-во участников в группе
      pv - ориентация страницы, е - если участников четно группам, т - их количество"""
@@ -12559,7 +12586,8 @@ def table_made(pv, stage):
     id_system = system_id(stage)
     system = System.select().where((System.title_id == title_id()) & (System.id == id_system)).get()  # находит system id последнего
     titles = Title.select().where(Title.id == title_id()).get()
-    sex = titles.gamer 
+   
+    sex = nazvanie_pol()
 
     if stage in stage_list_sf: # если этап полуфинал
         kg = system.total_group  # кол-во групп
