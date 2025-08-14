@@ -1158,8 +1158,6 @@ Button_turnir_2.clicked.connect(my_win.fast_change_comp)
 
 def enable_menu_system():
     """Устанавливает позиции меню системы в зависимости от пола играющих"""
-    # pol = activ_button_turnir()
-    # systems = System.select().where((System.title_id == title_id()) & (System.sex == pol))
     system_flag = ready_system()
     if system_flag == 0 or system_flag is False:
         my_win.system_made_Action.setEnabled(True)
@@ -3668,7 +3666,7 @@ def page():
     msgBox = QMessageBox()
     tb = my_win.toolBox.currentIndex()
     pol = activ_button_turnir()
-    sf = System.select().where((System.title_id == title_id() & System.sex == pol))  
+    sf = System.select().where((System.title_id == title_id()) & (System.sex == pol))  
     if tb == 0: # -титул-    
         my_win.resize(1110, 750)
         my_win.tabWidget_2.setGeometry(QtCore.QRect(260, 290, 841, 411)) # (точка слева, точка сверху, ширина, высота)
@@ -4690,7 +4688,7 @@ def add_or_delete_etap_after_choice(stage, flag):
 
 
 def system_competition():
-    """выбор системы проведения при изменении строки в комбобокс этап или мз меню"""
+    """выбор системы проведения при изменении строки в комбобокс этап или из меню"""
     msgBox = QMessageBox()
     sender = my_win.sender()
     system_etap_list = []
@@ -10942,8 +10940,9 @@ def control_all_player_in_final(etap, all_sum_player_final):
 def checking_before_the_draw():
     """Проверка перед жеребьевкой групп, что все игроки подтверждены"""
     checking_flag = False
+    pol = activ_button_turnir()
     msgBox = QMessageBox()
-    players = Player.select().where((Player.title_id == title_id()) & (Player.application == "предварительная"))
+    players = Player.select().where((Player.title_id == title_id()) & (Player.application == "предварительная") & (Player.sex == pol))
     count = len(players)
     if count > 0:
         msgBox.information(my_win, 'Уведомление',
