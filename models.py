@@ -254,11 +254,10 @@ class Referee(BaseModel):
     category = CharField(15)
     signature = BlobField(null=True)
 
-
     class Meta:
         db_table = "referees"
         order_by = "family"
-
+        
 class Players_double(BaseModel):
     player_1 = CharField(50)
     region_1 = CharField()

@@ -1156,6 +1156,16 @@ Button_turnir_1.clicked.connect(my_win.fast_change_comp)
 Button_turnir_2.clicked.connect(my_win.fast_change_comp)
 
 
+def enable_menu_system():
+    """Устанавливает позиции меню системы в зависимости от пола играющих"""
+    # pol = activ_button_turnir()
+    # systems = System.select().where((System.title_id == title_id()) & (System.sex == pol))
+    system_flag = ready_system()
+    if system_flag == 0 or system_flag is False:
+        my_win.system_made_Action.setEnabled(True)
+        my_win.system_edit_Action.setEnabled(False)
+
+
 def dolg_R():
     dolg_R_list = []
     dolg_player = Player.select().where((Player.title_id == title_id()) & (Player.pay_rejting == "долг"))
@@ -1678,13 +1688,10 @@ def button_comp_enabled():
     sender = my_win.sender()
     # ===== переключает вид кнопок =========
     if sender == Button_turnir_1:
-        txt_button = Button_turnir_1.text()
         my_win.setStyleSheet("#MainWindow{background-color:lightblue}") # текст нажатой кнопки
     elif sender == Button_turnir_2:
-        txt_button = Button_turnir_2.text()
         my_win.setStyleSheet("#MainWindow{background-color:lightpink}")
     pol = activ_button_turnir()
-    # button_list = [Button_turnir_1, Button_turnir_2]
     t = Title.get(Title.id == title_id())
     name_current = t.name # название текущих соревнований
     date_current = t.data_start # начало текущих соревнований
@@ -1713,7 +1720,6 @@ def button_comp_enabled():
 
     titles = Title.get((Title.full_name_comp == full_name) & (Title.vozrast == age)) 
     id_title = titles.id # id соревнования на которое переходим
-    # gamer = titles.gamer
     # ======= заполняет поля титул для определения title_id
     # заполняет поля вкладки - титул-    
     my_win.lineEdit_title_nazvanie.setText(titles.name)
@@ -1733,10 +1739,12 @@ def button_comp_enabled():
     index_list = []
     systems = System.select().where((System.title_id == id_title) & (System.sex == pol))
 
+    enable_menu_system() # если система еще не создана включает соответсвующие меню системы
+
     for s in systems:
-        flag = s.choice_flag
+        flag = s.choice_flag # False значит еще не было жеребьевки
         stage = s.stage
-        if flag == 1:
+        if flag == 1 or flag is True:
             tab_list.append(stage)
     if len(tab_list) == 0:
         ind = 0
@@ -3161,8 +3169,8 @@ def add_player():
                 debitor_R()            
             # =========
             system = System.select().where((System.title_id == title_id()) & (System.sex == pol))
-            system_flag = ready_system() # проверка была создана система
-            if system_flag is True:
+            flag_system = ready_system() # проверка была создана система
+            if flag_system is True:
                 result = msgBox.information(my_win, "", "Колличество спортсменов изменилось.\n"
                         "Чтоб изменить число спортсменов в группах nнажмите -ОК-,\nесли обновить систему нажмите -Cancel-",
                                             msgBox.Ok, msgBox.Cancel)
@@ -4074,6 +4082,7 @@ def otchestvo_input():
 def label_playing_count():
     """На вкладке -система- пишет сколько игр сыграно в каждом этапе"""
     pol = activ_button_turnir()
+    count_playing = 0
     result = Result.select().where((Result.title_id == title_id()) & (Result.sex == pol))
     system = System.select().where((System.title_id == title_id()) & (System.sex == pol))
     n = 0
@@ -4825,7 +4834,22 @@ def system_competition():
         my_win.label_86.hide()
         my_win.label_87.hide()
  
-        my_win.tabWidget.setTabEnabled(2, True) # включает вкладку
+# =======================
+        # my_win.comboBox_table_1.hide()
+        # my_win.comboBox_table_2.hide()
+        # my_win.comboBox_table_3.hide()
+        # my_win.comboBox_table_4.hide()
+        # my_win.comboBox_table_5.hide()
+        # my_win.comboBox_table_6.hide()
+        # my_win.comboBox_table_7.hide()
+        # my_win.comboBox_table_8.hide()
+        # my_win.comboBox_table_9.hide()
+        # my_win.comboBox_table_10.hide()
+        # my_win.comboBox_table_11.hide()
+        # my_win.comboBox_table_12.hide()
+
+# ===============================
+        # my_win.tabWidget.setTabEnabled(2, True) # включает вкладку
 
         if flag_system is True:
             flag_choice = ready_choice(stage)
@@ -4848,7 +4872,7 @@ def system_competition():
             my_win.label_10.setText("1-й этап")
             my_win.Button_etap_made.setEnabled(False)
             my_win.comboBox_page_vid.setEnabled(True)
-            player = Player.select().where((Player.title_id == title_id()) & (Player.bday != '0000-00-00'))
+            player = Player.select().where((Player.title_id == title_id()) & (Player.bday != '0000-00-00') & (Player.sex == pol))
             count = len(player)
             if count != 0:
                 my_win.tabWidget.setCurrentIndex(2)
@@ -4906,8 +4930,9 @@ def system_clear():
 def one_table(fin, group):
     """система соревнований из одной таблицы запись в System, Game_list, Result"""
     msgBox = QMessageBox()
-    ch = Choice.select().where(Choice.title_id == title_id())
-    count = len(Player.select().where(Player.title_id == title_id()))
+    pol = activ_button_turnir()
+    ch = Choice.select().where(Choice.title_id == title_id() & (Choice.sex == pol))
+    count = len(Player.select().where(Player.title_id == title_id()) & (Player.sex == pol))
     visible_game = 1 if my_win.checkBox_visible_game.isChecked() else 0
     # в зависмости сетка или круг
     cur_index = my_win.comboBox_table_1.currentIndex()
@@ -4937,12 +4962,11 @@ def one_table(fin, group):
             total_athletes = full_net_player(player_in_final=count)
            
 
-        flag_ready_system = ready_system()
-        if flag_ready_system is False:
-            sys_m = System.select().where(System.title_id == title_id()).get()
+        flag_system = ready_system()
+        if flag_system is False:
+            sys_m = System.select().where(System.title_id == title_id() & (System.sex == pol)).get()
             total_game = numbers_of_games(cur_index, player_in_final=count, kpt=0)
             sys_m.max_player = total_athletes
-            # sys_m.total_athletes = total_athletes
             sys_m.total_athletes = count
             sys_m.total_group = group
             sys_m.stage = my_win.comboBox_etap.currentText()
@@ -6150,7 +6174,7 @@ def delete_player():
     """удаляет игрока из списка и заносит его в архив"""
     msgBox = QMessageBox
     pol = activ_button_turnir()
-    game_list = Game_list.select().where(Game_list.title_id == title_id())
+    game_list = Game_list.select().where(Game_list.title_id == title_id() & (Game_list.sex == pol))
     system = System.select().where((System.title_id == title_id()) & (System.sex == pol))
     result = Result.select().where((Result.title_id == title_id()) & (Result.sex == pol))
     titles = Title.select().where(Title.id == title_id()).get()
@@ -6180,8 +6204,8 @@ def delete_player():
                                          f" {player_del} город {player_city_del}?",
                              msgBox.Ok, msgBox.Cancel)
     if question == msgBox.Ok:
-        system_flag = ready_system() # проверка была создана система True - система создана
-        if system_flag is True:
+        flag_system = ready_system() # проверка была создана система True - система создана
+        if flag_system is True:
             count = len(system)
         # ============ корректрует запись в таблице -system- после удаления игрока
             if count == 1: # значит система состоит из одной таблицы
@@ -6262,9 +6286,9 @@ def delete_player():
         with db: 
             del_player   = Delete_player(bday=birthday_mod, rank=rank, city=player_city_del,
                                         region=region, razryad=razryad, coach_id=coach_id, full_name=full_name,
-                                        player=player_del, title_id=title_id(), pay_rejting=pay_R, comment=comment, patronymic_id=patronymic_id).save()
+                                        player=player_del, title_id=title_id(), pay_rejting=pay_R, comment=comment, patronymic_id=patronymic_id, sex=pol).save()
             
-        if system_flag is True:  # удаляет игрока из таблицы -Choice-, если была создана система 
+        if flag_system is True:  # удаляет игрока из таблицы -Choice-, если была создана система 
             choices = Choice.select().where((Choice.title_id == title_id()) & (Choice.player_choice_id == player_id))
             count = len(choices)
             if count == 1: # если -0-, значит удалили после жеребьевки
@@ -6281,11 +6305,11 @@ def delete_player():
         my_win.lineEdit_city_list.clear()
         my_win.lineEdit_coach.clear()
         my_win.lineEdit_otchestvo.clear()
-        player_list_pred = Player.select().where((Player.title_id == title_id()) & (Player.application == "предварительная"))
+        player_list_pred = Player.select().where((Player.title_id == title_id()) & (Player.application == "предварительная") & (Player.sex == pol))
         count = len(player_list_pred)    
         my_win.label_predzayavka.setText(f"По предзаявке {count} чел.")
         my_win.label_predzayavka.setStyleSheet("color: black")
-        player_list = Player.select().where(Player.title_id == title_id())
+        player_list = Player.select().where((Player.title_id == title_id()) & (Player.sex == pol))
         count = len(player_list)
         my_win.label_46.setText(f"Всего: {count} участников")
         fill_table(player_list)
@@ -11423,7 +11447,8 @@ def ready_system():
 
 def ready_choice(stage):
     """проверка на готовность жеребьевки групп"""
-    sys = System.select().where(System.title_id == title_id())
+    pol = activ_button_turnir()
+    sys = System.select().where(System.title_id == title_id() & (System.sex == pol))
     id_system = system_id(stage)
     greb_flag = False
     if stage != "":
@@ -11964,7 +11989,8 @@ def title_id():
 
 def system_id(stage):
     """получения id системы данного этапа"""
-    systems = System.select().where((System.stage == stage) & (System.title_id == title_id())).get()
+    pol = activ_button_turnir()
+    systems = System.select().where((System.stage == stage) & (System.title_id == title_id()) & (System.sex == pol)).get()
     id_system = systems.id
     return id_system
 
@@ -18270,8 +18296,8 @@ def add_double_player_to_list():
 #     #     Player.update(region=reg).execute()
 #     print("Все записи обновлены")
 # =======        
-def proba():
-    myconn = pymysql.connect(host = "localhost", user = "root", passwd = "db_pass", database = "mysql_db") 
+# def proba():
+#     myconn = pymysql.connect(host = "localhost", user = "root", passwd = "db_pass", database = "mysql_db") 
 #     # создать таблицу
     
     # class Players_double(BaseModel):
@@ -18322,20 +18348,15 @@ def proba():
     # date_format='%Y-%m-%d'
     # )
 # =====================================================
-    migrator = MySQLMigrator(db)
-
-    
-#     # # posev_super_final = ForeignKeyField(Choise, field=System.id, null=True)
-
-    with db.atomic():
-
+    # migrator = MySQLMigrator(db)
+    # with db.atomic():
         # migrate(migrator.drop_column('choices', 'posev_super_final')) # удаление столбца
         # migrate(migrator.alter_column_type('system', 'mesta_exit', IntegerField()))
         # migrate(migrator.rename_column('titles', 'kat_sek', 'kat_sec')) # Переименование столбца (таблица, старое название, новое название столбца)
-        migrate(migrator.add_column('game_lists', 'sex', CharField(max_length=10, null=True))) # Добавление столбца (таблица, столбец, повтор название столбца)
-    db.close()
+    #     migrate(migrator.add_column('game_lists', 'sex', CharField(max_length=10, null=True))) # Добавление столбца (таблица, столбец, повтор название столбца)
+    # db.close()
 
-my_win.Button_proba.clicked.connect(proba) # запуск пробной функции
+# my_win.Button_proba.clicked.connect(proba) # запуск пробной функции
 
 # ===== переводит фокус на поле ввода счета в партии вкладки -группа-
 my_win.lineEdit_pl1_s1.returnPressed.connect(focus)
