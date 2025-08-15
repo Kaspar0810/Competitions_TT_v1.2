@@ -4874,6 +4874,7 @@ def system_competition():
             count = len(player)
             if count != 0:
                 my_win.tabWidget.setCurrentIndex(2)
+                my_win.tabWidget.setTabEnabled(2, True)
             else:
                 reply = QMessageBox.information(my_win, 'Уведомление',
                                                 "У Вас нет ни одного спортсмена.\nСначала необходимо создать "
@@ -4929,7 +4930,7 @@ def one_table(fin, group):
     """система соревнований из одной таблицы запись в System, Game_list, Result"""
     msgBox = QMessageBox()
     pol = activ_button_turnir()
-    ch = Choice.select().where(Choice.title_id == title_id() & (Choice.sex == pol))
+    ch = Choice.select().where((Choice.title_id == title_id()) & (Choice.sex == pol))
     count = len(Player.select().where(Player.title_id == title_id()) & (Player.sex == pol))
     visible_game = 1 if my_win.checkBox_visible_game.isChecked() else 0
     # в зависмости сетка или круг
@@ -4959,10 +4960,9 @@ def one_table(fin, group):
         else: # на сколько участников таблица
             total_athletes = full_net_player(player_in_final=count)
            
-
         flag_system = ready_system()
         if flag_system is False:
-            sys_m = System.select().where(System.title_id == title_id() & (System.sex == pol)).get()
+            sys_m = System.select().where((System.title_id == title_id()) & (System.sex == pol)).get()
             total_game = numbers_of_games(cur_index, player_in_final=count, kpt=0)
             sys_m.max_player = total_athletes
             sys_m.total_athletes = count
@@ -5199,6 +5199,7 @@ def view():
 def player_in_setka_and_write_Game_list_and_Result(fin, posev_data):
     """заполняет таблицу Game_list данными спортсменами из сетки tds - список списков данных из сетки, а затем
     заполняет таблицу -Result-"""
+    pol = activ_button_turnir()
     id_system = system_id(stage=fin)
     system = System.select().where((System.title_id == title_id()) & (System.id == id_system)).get()  # находит system id последнего
     st = "Финальный"
@@ -5242,7 +5243,7 @@ def player_in_setka_and_write_Game_list_and_Result(fin, posev_data):
             if len(pl_x) == 0:
                 players = Player.insert(player="X", bday='0000-00-00', city="", region="", razryad="",coach_id=1, 
                                         mesto=0, full_name="X", title_id=title_id(), pay_rejting="", comment="",  coefficient_victories="", 
-                                        total_game_player=0, total_win_game=0, application="", patronymic_id=1).execute()
+                                        total_game_player=0, total_win_game=0, application="", patronymic_id=1, sex=pol).execute()
             else:
                 player_s = pl.select().where(Player.player == "X").get()
                 pl_id = player_s.id
@@ -5253,7 +5254,7 @@ def player_in_setka_and_write_Game_list_and_Result(fin, posev_data):
 
         with db:
             game_list = Game_list(number_group=fin, rank_num_player=k, player_group_id=player_id,
-                                  system_id=id_system, title_id=title_id()).save()
+                                  system_id=id_system, title_id=title_id(), sex=pol).save()
 
     for i in range(1, mp // 2 + 1):  # присваивает встречи 1-ого тура и записывает в тбл Results
         num_game = i
@@ -5262,13 +5263,13 @@ def player_in_setka_and_write_Game_list_and_Result(fin, posev_data):
         if pl1 is not None and pl2 is not None:
             with db:
                 results = Result(number_group=fin, system_stage=st, player1=pl1, player2=pl2,
-                                 tours=num_game, title_id=title_id(), system_id=id_system).save()
+                                 tours=num_game, title_id=title_id(), system_id=id_system, sex=pol).save()
     for i in range(mp // 2 + 1, game + 1):  # дополняет номера будущих встреч
         pl1 = ""
         pl2 = ""
         with db:
             results = Result(number_group=fin, system_stage=st, player1=pl1, player2=pl2,
-                             tours=i, title_id=title_id(),system_id=id_system).save()
+                             tours=i, title_id=title_id(),system_id=id_system, sex=pol).save()
 
 
 def player_in_one_table(fin):
@@ -5744,7 +5745,8 @@ def _player_fin_on_circle(fin):
 def player_in_table_group_and_write_Game_list_Result(stage):
     """заполняет таблицу Game_list данными спортсменами из группы td - список списков данных из групп и записывает
     встречи по турам в таблицу -Result- """
-    system = System.select().where((System.title_id == title_id()) & (System.stage == stage)).get() # находит system id этапа
+    pol = activ_button_turnir()
+    system = System.select().where((System.title_id == title_id()) & (System.stage == stage) & (System.sex == pol)).get() # находит system id этапа
     system_id = system.id
     kg = system.total_group
     pv = system.page_vid
@@ -5778,7 +5780,7 @@ def player_in_table_group_and_write_Game_list_Result(stage):
                 with db:
                     game_list = Game_list(number_group=number_group, rank_num_player=posev, 
                                             player_group_id=player_id,
-                                            system_id=system_id, title_id=title_id()).save()
+                                            system_id=system_id, title_id=title_id(), sex=pol).save()
 
         # если 1-я строка (фамилия игрока) пустая выход из группы
         if fp == 0 and k != 0 or k == count_player:
@@ -5807,7 +5809,7 @@ def player_in_table_group_and_write_Game_list_Result(stage):
                     full_pl2 = f"{pl2_id}/{cit2}"
                     with db:
                         results = Result(number_group=number_group, system_stage=stage, player1=full_pl1, player2=full_pl2,
-                                         tours=match, title_id=title_id(), round=round, system_id=system_id).save()
+                                         tours=match, title_id=title_id(), round=round, system_id=system_id, sex=pol).save()
 
 
 def player_in_setka_and_write_Game_list_Result(stage, posev_list, full_name_list):
@@ -7843,6 +7845,7 @@ def choice_gr_automat():
     " current_region_group - словарь (регион - список номеров групп куда можно сеять)"
     " reg_player - словарь регион ид игрока, player_current - список сеящихся игроков, posev - словарь всего посева"
     import ast
+    pol = activ_button_turnir()
     msgBox = QMessageBox()
     posev_tmp = {}
     reg_player = {}
@@ -7867,7 +7870,7 @@ def choice_gr_automat():
     id_fam_region_list_tmp = []
     id_family_region_list = []
     stage = "Предварительный"
-    sys = System.select().where(System.title_id == title_id())
+    sys = System.select().where((System.title_id == title_id()) & (System.sex == pol))
     sys_id = sys.select().where(System.stage == stage).get()
     group = sys_id.total_group
     total_player = sys_id.total_athletes
@@ -7879,7 +7882,7 @@ def choice_gr_automat():
         posev[f"{b}_посев"] = gr_region
         posev_group.clear()
     
-    pl_choice = Choice.select().where((Choice.title_id == title_id()) & (Choice.family != "X")).order_by(Choice.rank.desc())
+    pl_choice = Choice.select().where((Choice.title_id == title_id()) & (Choice.family != "X") & (Choice.sex == pol)).order_by(Choice.rank.desc())
     m = 1  # начальное число посева
     p = 0
     number_poseva = 0  # общий счетчик посева игроков
@@ -9949,12 +9952,14 @@ def add_delete_region_group(key_reg_current, current_region_group, posev_tmp, m,
 
 def choice_save(m, player_current, reg_player):
     """запись в db результаты жеребьевки конкретного посева"""
+    pol = activ_button_turnir()
     for i in player_current:
         num_group = reg_player[i]
         with db:  # запись в таблицу Choice результата жеребъевки
             choice = Choice.get(Choice.player_choice_id == i)
             choice.group = f"{num_group} группа"
             choice.posev_group = m
+            choice.sex = pol
             choice.save()
 
 
@@ -11062,7 +11067,6 @@ def made_system_load_combobox_etap():
             my_win.spinBox_kol_group.hide()
             my_win.label_101.show()
             my_win.label_101.setText("Одна таблица")
-            # my_win.label_11.show()
             my_win.label_11.hide()
         elif ct == "Предварительный":
             my_win.spinBox_kol_group.show()
@@ -14810,7 +14814,8 @@ def  table_data(stage, kg):
     tdt_color = []
     tdt_new = []
     tdt_new_id = []
-    result = Result.select().where(Result.title_id == title_id())  # находит system id последнего
+    pol = activ_button_turnir()
+    result = Result.select().where((Result.title_id == title_id()) & (Result.sex == pol))  # находит system id последнего
     id_system = system_id(stage)
     if kg == 1:  # система одна таблица круг или финалу по кругу
         # список словарей участник и его регион
